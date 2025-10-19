@@ -5,5 +5,9 @@ import { Router } from 'lib/electron-router-dom';
 import { MainScreen } from './screens/main';
 
 export function AppRoutes() {
-  return <Router main={<Route element={<MainScreen />} path="/" />} />;
+  return (
+    <div className="background">
+      <Router main={<Route element={<MainScreen />} path="/" />} />
+    </div>
+  );
 }
