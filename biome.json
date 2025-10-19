@@ -23,12 +23,12 @@
   },
   "javascript": {
     "formatter": {
-      "arrowParentheses": "asNeeded",
+      "arrowParentheses": "always",
       "bracketSpacing": true,
       "indentStyle": "space",
       "jsxQuoteStyle": "double",
       "quoteStyle": "single",
-      "semicolons": "asNeeded",
+      "semicolons": "always",
       "trailingCommas": "es5"
     }
   },
