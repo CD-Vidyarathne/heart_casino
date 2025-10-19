@@ -31,15 +31,10 @@
     "lint:fix": "biome check --write --no-errors-on-unmatched --assist-enabled=true"
   },
   "dependencies": {
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
     "electron-router-dom": "^2.1.0",
-    "lucide-react": "^0.541.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-router-dom": "^7.8.2",
-    "tailwind-merge": "^3.3.1",
-    "tailwindcss-animate": "^1.0.7"
+    "react-router-dom": "^7.8.2"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.3",
