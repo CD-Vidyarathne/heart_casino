@@ -1,14 +1,34 @@
-import { contextBridge } from 'electron';
+/* eslint no-unused-vars: off */
+import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import type { Channel } from '../main/ipc/channels';
 
-declare global {
-  interface Window {
-    App: typeof API;
-  }
-}
+export type Channels = Channel;
 
-const API = {
-  sayHelloFromBridge: () => console.log('\nHello from bridgeAPI! 👋\n\n'),
-  username: process.env.USER,
+const electronHandler = {
+  ipcRenderer: {
+    sendMessage(channel: Channels, ...args: unknown[]) {
+      ipcRenderer.send(channel, ...args);
+    },
+    invoke<T = unknown>(channel: Channels, ...args: unknown[]): Promise<T> {
+      return ipcRenderer.invoke(channel, ...args);
+    },
+    on(channel: Channels, func: (...args: unknown[]) => void) {
+      const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
+        func(...args);
+      ipcRenderer.on(channel, subscription);
+      return () => {
+        ipcRenderer.removeListener(channel, subscription);
+      };
+    },
+    once(channel: Channels, func: (...args: unknown[]) => void) {
+      ipcRenderer.once(channel, (_event, ...args) => func(...args));
+    },
+    removeAll(channel: Channels) {
+      ipcRenderer.removeAllListeners(channel);
+    },
+  },
 };
 
-contextBridge.exposeInMainWorld('App', API);
+contextBridge.exposeInMainWorld('electron', electronHandler);
+
+export type ElectronHandler = typeof electronHandler;

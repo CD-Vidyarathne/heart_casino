@@ -1,0 +1,4 @@
+This assignment asks you to reflect on various concepts, paradigms and architectures related to Computer Science. Based on your code you will do a
+video to discuss the four themes software design principles (low coupling and high cohesion), event-driven programming, interoperability, and
+virtual identity. You will develop code in a main-stream programming language chosen by you. Your main submission is the video; but you will also
+submit supporting evidence that shows that you worked on the code.

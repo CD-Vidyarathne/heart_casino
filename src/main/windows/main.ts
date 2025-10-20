@@ -14,7 +14,7 @@ export async function MainWindow() {
     show: false,
     movable: true,
     alwaysOnTop: false,
-    autoHideMenuBar: false,
+    autoHideMenuBar: true,
 
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
