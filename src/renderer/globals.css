@@ -1,33 +1,118 @@
+@import url("https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:wght@400;500;600;700&family=Rubik+Puddles&display=swap");
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:wght@400;&family=Rubik+Puddles&display=swap");
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+:root {
+  --color-primary: #8b5cf6;
+  --color-primary-dark: #7c3aed;
+  --color-primary-light: #a78bfa;
+  --color-secondary: #ec4899;
+  --color-accent: #f59e0b;
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+
+  --color-bg-primary: #1f1b2e;
+  --color-bg-secondary: #2d1b69;
+  --color-bg-glass: rgba(139, 92, 246, 0.1);
+  --color-bg-glass-hover: rgba(139, 92, 246, 0.2);
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #e5e7eb;
+  --color-text-muted: #9ca3af;
+
+  --color-border: rgba(139, 92, 246, 0.3);
+  --color-border-focus: rgba(139, 92, 246, 0.6);
 }
 
 .background {
   background-image: url("../resources/public/main_bg.png");
   background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  width: 100vw;
 }
 
-.rubik-puddles-regular {
+/* Font Classes */
+.rubik-puddles {
   font-family: "Rubik Puddles", system-ui;
   font-weight: 400;
   font-style: normal;
 }
 
-.luckiest-guy-regular {
+.luckiest-guy {
   font-family: "Luckiest Guy", cursive;
   font-weight: 400;
   font-style: normal;
 }
 
-.poppins-regular {
+.poppins {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-style: normal;
+}
+
+.poppins-medium {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.poppins-semibold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.poppins-bold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Custom utility classes for 480x854 resolution */
+.screen-container {
+  width: 480px;
+  height: 854px;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.screen-content {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Glass morphism effects */
+.glass {
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border);
+}
+
+.glass-hover {
+  background: var(--color-bg-glass-hover);
+  backdrop-filter: blur(15px);
+}
+
+/* Custom scrollbar for mobile-like experience */
+.screen-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.screen-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.screen-content::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 2px;
+}
+
+.screen-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-dark);
 }

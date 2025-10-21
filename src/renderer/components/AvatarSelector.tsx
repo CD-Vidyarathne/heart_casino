@@ -18,18 +18,18 @@ export const AvatarSelector: React.FC<AvatarSelectorProps> = ({
 
   return (
     <div className={`w-full ${className}`}>
-      <label className="block text-sm font-medium text-white mb-4">
+      <label className="block text-sm font-medium text-white mb-3 poppins-medium">
         Choose Your Avatar
       </label>
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid grid-cols-5 gap-2">
         {avatars.map((avatar, index) => (
           <div
             key={index}
             className={`
-              w-16 h-16 rounded-full border-4 cursor-pointer transition-all duration-200
+              w-12 h-12 rounded-full border-3 cursor-pointer transition-all duration-200
               ${selectedAvatar === avatar 
-                ? 'border-red-400 ring-4 ring-red-400/30 scale-110' 
-                : 'border-gray-400 hover:border-red-300 hover:scale-105'
+                ? 'border-purple-400 ring-3 ring-purple-400/30 scale-110' 
+                : 'border-gray-400 hover:border-purple-300 hover:scale-105'
               }
             `}
             onClick={() => onSelectAvatar(avatar)}

@@ -42,32 +42,40 @@ export const MainMenuScreen: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl">
-        <TitleBar
-          title="Heart Casino"
-          subtitle="Welcome to the ultimate gaming experience"
-          className="mb-12"
-        />
+    <div className="screen-container">
+      <div className="screen-content">
+        <div className="text-center mb-6">
+          <img
+            src={ASSETS.MAIN_LOGO_NO_BG}
+            alt="Heart Casino Logo"
+            className="h-12 mx-auto mb-4"
+          />
+          <TitleBar
+            title="Heart Casino"
+            subtitle="Welcome to the ultimate gaming experience"
+          />
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-4">
           {menuOptions.map((option) => (
             <Card
               key={option.id}
               hover
               onClick={option.action}
-              className="p-6 text-center group"
+              className="p-4 text-center group"
             >
-              <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
                 {option.icon}
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">
+              <h3 className="text-lg font-bold text-white mb-2 luckiest-guy">
                 {option.title}
               </h3>
-              <p className="text-gray-300 mb-4">{option.subtitle}</p>
+              <p className="text-gray-300 mb-3 text-sm poppins">
+                {option.subtitle}
+              </p>
               <Button
                 variant={option.variant}
-                size="lg"
+                size="md"
                 className="w-full"
                 onClick={() => option.action()}
               >
@@ -76,16 +84,7 @@ export const MainMenuScreen: React.FC = () => {
             </Card>
           ))}
         </div>
-
-        <div className="mt-12 text-center">
-          <img
-            src={ASSETS.MAIN_LOGO_NO_BG}
-            alt="Heart Casino Logo"
-            className="h-16 mx-auto opacity-80"
-          />
-        </div>
       </div>
     </div>
   );
 };
-

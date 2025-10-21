@@ -44,55 +44,57 @@ export const RegistrationProfileEditScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl p-8">
-        <TitleBar 
-          title="Complete Your Profile" 
-          subtitle="Tell us about yourself to personalize your experience"
-        />
-        
-        <form onSubmit={(e) => { e.preventDefault(); handleComplete(); }} className="space-y-8">
-          <Input
-            type="text"
-            label="Display Name"
-            placeholder="Enter your display name"
-            value={displayName}
-            onChange={setDisplayName}
-            error={errors.displayName}
-            required
+    <div className="screen-container">
+      <div className="screen-content">
+        <Card className="w-full p-6">
+          <TitleBar 
+            title="Complete Your Profile" 
+            subtitle="Tell us about yourself to personalize your experience"
           />
           
-          <GenderToggle
-            selectedGender={gender}
-            onGenderChange={handleGenderChange}
-          />
-          
-          <AvatarSelector
-            selectedAvatar={selectedAvatar}
-            onSelectAvatar={setSelectedAvatar}
-            gender={gender}
-          />
-          
-          <div className="flex gap-4 pt-4">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => navigate('/register')}
-              className="flex-1"
-            >
-              Back
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={isLoading}
-              className="flex-1"
-            >
-              {isLoading ? 'Creating Profile...' : 'Complete Registration'}
-            </Button>
-          </div>
-        </form>
-      </Card>
+          <form onSubmit={(e) => { e.preventDefault(); handleComplete(); }} className="space-y-6">
+            <Input
+              type="text"
+              label="Display Name"
+              placeholder="Enter your display name"
+              value={displayName}
+              onChange={setDisplayName}
+              error={errors.displayName}
+              required
+            />
+            
+            <GenderToggle
+              selectedGender={gender}
+              onGenderChange={handleGenderChange}
+            />
+            
+            <AvatarSelector
+              selectedAvatar={selectedAvatar}
+              onSelectAvatar={setSelectedAvatar}
+              gender={gender}
+            />
+            
+            <div className="flex gap-3 pt-4">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => navigate('/register')}
+                className="flex-1"
+              >
+                Back
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={isLoading}
+                className="flex-1"
+              >
+                {isLoading ? 'Creating Profile...' : 'Complete Registration'}
+              </Button>
+            </div>
+          </form>
+        </Card>
+      </div>
     </div>
   );
 };

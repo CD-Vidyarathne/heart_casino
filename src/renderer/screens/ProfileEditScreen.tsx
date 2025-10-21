@@ -123,20 +123,20 @@ export const ProfileEditScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen p-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="screen-container">
+      <div className="screen-content">
         <TitleBar 
           title="Edit Profile" 
           subtitle="Manage your account settings"
-          className="mb-8"
+          className="mb-6"
         />
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="space-y-6">
           {/* Profile Information */}
-          <Card className="p-6">
-            <h3 className="text-xl font-bold text-white mb-6">Profile Information</h3>
+          <Card className="p-4">
+            <h3 className="text-lg font-bold text-white mb-4 luckiest-guy">Profile Information</h3>
             
-            <form onSubmit={(e) => { e.preventDefault(); handleSaveProfile(); }} className="space-y-6">
+            <form onSubmit={(e) => { e.preventDefault(); handleSaveProfile(); }} className="space-y-4">
               <Input
                 type="text"
                 label="Display Name"
@@ -180,12 +180,12 @@ export const ProfileEditScreen: React.FC = () => {
           </Card>
 
           {/* Security Settings */}
-          <Card className="p-6">
-            <h3 className="text-xl font-bold text-white mb-6">Security Settings</h3>
+          <Card className="p-4">
+            <h3 className="text-lg font-bold text-white mb-4 luckiest-guy">Security Settings</h3>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm font-medium text-white mb-2 poppins-medium">
                   Password
                 </label>
                 <Button

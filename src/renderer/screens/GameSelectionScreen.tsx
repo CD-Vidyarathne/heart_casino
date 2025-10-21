@@ -57,41 +57,42 @@ export const GameSelectionScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl">
+    <div className="screen-container">
+      <div className="screen-content">
         <TitleBar 
           title="Choose Your Game" 
           subtitle="Select a game to start playing"
-          className="mb-12"
+          className="mb-6"
         />
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="space-y-4">
           {games.map((game) => (
             <Card
               key={game.id}
               hover
-              className="p-8 text-center group relative"
+              className="p-4 text-center group relative"
             >
-              <div className="text-8xl mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
                 {game.icon}
               </div>
               
-              <h3 className="text-3xl font-bold text-white mb-4">
+              <h3 className="text-xl font-bold text-white mb-3 luckiest-guy">
                 {game.name}
               </h3>
               
-              <p className="text-gray-300 mb-6 text-lg">
+              <p className="text-gray-300 mb-4 text-sm poppins">
                 {game.description}
               </p>
               
-              <div className="flex gap-4 justify-center">
+              <div className="flex gap-2 justify-center">
                 <Button
                   variant="secondary"
                   onClick={() => {
                     setSelectedGame(game);
                     setShowRules(true);
                   }}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1 text-xs"
+                  size="sm"
                 >
                   <span>ℹ️</span>
                   Rules
@@ -100,7 +101,7 @@ export const GameSelectionScreen: React.FC = () => {
                 <Button
                   variant="primary"
                   onClick={() => handleGameSelect(game)}
-                  size="lg"
+                  size="md"
                   className="flex-1"
                 >
                   Play {game.name}
@@ -110,11 +111,11 @@ export const GameSelectionScreen: React.FC = () => {
           ))}
         </div>
         
-        <div className="mt-12 text-center">
+        <div className="mt-6 text-center">
           <Button
             variant="secondary"
             onClick={handleBack}
-            size="lg"
+            size="md"
           >
             ← Back to Main Menu
           </Button>

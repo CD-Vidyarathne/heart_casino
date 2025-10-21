@@ -14,6 +14,7 @@ import { Navigation } from './components';
 export function AppRoutes() {
   return (
     <div className="background">
+      {/* <Navigation /> */}
       <Router
         main={
           <>

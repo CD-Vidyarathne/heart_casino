@@ -37,22 +37,24 @@ export const Modal: React.FC<ModalProps> = ({
       className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-2xl max-w-md w-full mx-4">
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">{title}</h2>
-          <div className="mb-6">{children}</div>
+      <div className="glass rounded-xl border border-purple-400/30 shadow-2xl max-w-sm w-full mx-4">
+        <div className="p-4">
+          <h2 className="text-xl font-bold text-white mb-4 luckiest-guy">{title}</h2>
+          <div className="mb-4">{children}</div>
           {showActions && (
-            <div className="flex gap-3 justify-end">
+            <div className="flex gap-2 justify-end">
               <Button
-                variant="secondary"
+                variant="cancel"
                 onClick={onCancel || onClose}
+                size="sm"
               >
                 {cancelText}
               </Button>
               {onConfirm && (
                 <Button
-                  variant="primary"
+                  variant="confirm"
                   onClick={onConfirm}
+                  size="sm"
                 >
                   {confirmText}
                 </Button>

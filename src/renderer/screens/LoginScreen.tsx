@@ -45,56 +45,58 @@ export const LoginScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md p-8">
-        <TitleBar 
-          title="Welcome Back!" 
-          subtitle="Sign in to your casino account"
-        />
-        
-        <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} className="space-y-6">
-          <Input
-            type="email"
-            label="Email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={setEmail}
-            error={errors.email}
-            required
+    <div className="screen-container">
+      <div className="screen-content flex items-center justify-center">
+        <Card className="w-full p-6">
+          <TitleBar 
+            title="Welcome Back!" 
+            subtitle="Sign in to your casino account"
           />
           
-          <Input
-            type="password"
-            label="Password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={setPassword}
-            error={errors.password}
-            required
-          />
+          <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} className="space-y-4">
+            <Input
+              type="email"
+              label="Email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={setEmail}
+              error={errors.email}
+              required
+            />
+            
+            <Input
+              type="password"
+              label="Password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={setPassword}
+              error={errors.password}
+              required
+            />
+            
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              disabled={isLoading}
+              className="w-full"
+            >
+              {isLoading ? 'Signing In...' : 'Sign In'}
+            </Button>
+          </form>
           
-          <Button
-            type="submit"
-            variant="primary"
-            size="lg"
-            disabled={isLoading}
-            className="w-full"
-          >
-            {isLoading ? 'Signing In...' : 'Sign In'}
-          </Button>
-        </form>
-        
-        <div className="mt-6 text-center">
-          <p className="text-gray-300 mb-4">Don't have an account?</p>
-          <Button
-            variant="secondary"
-            onClick={handleRegister}
-            className="w-full"
-          >
-            Create New Account
-          </Button>
-        </div>
-      </Card>
+          <div className="mt-4 text-center">
+            <p className="text-gray-300 mb-3 text-sm poppins">Don't have an account?</p>
+            <Button
+              variant="secondary"
+              onClick={handleRegister}
+              className="w-full"
+            >
+              Create New Account
+            </Button>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };

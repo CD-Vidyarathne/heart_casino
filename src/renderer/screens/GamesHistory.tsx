@@ -114,100 +114,103 @@ export const GamesHistory: React.FC = () => {
   }, { totalGames: 0, wins: 0, losses: 0, ties: 0, chipsWon: 0, chipsLost: 0 });
 
   return (
-    <div className="min-h-screen p-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="screen-container">
+      <div className="screen-content">
         <TitleBar 
           title="Game History" 
           subtitle="Your gaming statistics and past games"
-          className="mb-8"
+          className="mb-6"
         />
         
         {/* Stats Overview */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <Card className="p-4 text-center">
-            <div className="text-2xl font-bold text-white">{totalStats.totalGames}</div>
-            <div className="text-gray-300 text-sm">Total Games</div>
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <Card className="p-3 text-center">
+            <div className="text-xl font-bold text-white luckiest-guy">{totalStats.totalGames}</div>
+            <div className="text-gray-300 text-xs poppins">Total Games</div>
           </Card>
-          <Card className="p-4 text-center">
-            <div className="text-2xl font-bold text-green-400">{totalStats.wins}</div>
-            <div className="text-gray-300 text-sm">Wins</div>
+          <Card className="p-3 text-center">
+            <div className="text-xl font-bold text-green-400 luckiest-guy">{totalStats.wins}</div>
+            <div className="text-gray-300 text-xs poppins">Wins</div>
           </Card>
-          <Card className="p-4 text-center">
-            <div className="text-2xl font-bold text-red-400">{totalStats.losses}</div>
-            <div className="text-gray-300 text-sm">Losses</div>
+          <Card className="p-3 text-center">
+            <div className="text-xl font-bold text-red-400 luckiest-guy">{totalStats.losses}</div>
+            <div className="text-gray-300 text-xs poppins">Losses</div>
           </Card>
-          <Card className="p-4 text-center">
-            <div className="text-2xl font-bold text-yellow-400">{totalStats.ties}</div>
-            <div className="text-gray-300 text-sm">Ties</div>
+          <Card className="p-3 text-center">
+            <div className="text-xl font-bold text-yellow-400 luckiest-guy">{totalStats.ties}</div>
+            <div className="text-gray-300 text-xs poppins">Ties</div>
           </Card>
         </div>
 
         {/* Filter Buttons */}
-        <div className="flex gap-2 mb-6 justify-center">
+        <div className="flex gap-1 mb-4 justify-center">
           <Button
             variant={filter === 'all' ? 'primary' : 'secondary'}
             onClick={() => setFilter('all')}
             size="sm"
+            className="text-xs px-2 py-1"
           >
-            All Games
+            All
           </Button>
           <Button
             variant={filter === 'blackjack' ? 'primary' : 'secondary'}
             onClick={() => setFilter('blackjack')}
             size="sm"
+            className="text-xs px-2 py-1"
           >
-            🃏 Blackjack
+            🃏 BJ
           </Button>
           <Button
             variant={filter === 'heart-game' ? 'primary' : 'secondary'}
             onClick={() => setFilter('heart-game')}
             size="sm"
+            className="text-xs px-2 py-1"
           >
-            ❤️ Heart Game
+            ❤️ Hearts
           </Button>
         </div>
 
         {/* Game History List */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {filteredGames.length === 0 ? (
-            <Card className="p-8 text-center">
-              <div className="text-6xl mb-4">📊</div>
-              <h3 className="text-xl font-bold text-white mb-2">No Games Found</h3>
-              <p className="text-gray-300">Start playing to see your game history here!</p>
+            <Card className="p-6 text-center">
+              <div className="text-4xl mb-3">📊</div>
+              <h3 className="text-lg font-bold text-white mb-2 luckiest-guy">No Games Found</h3>
+              <p className="text-gray-300 text-sm poppins">Start playing to see your game history here!</p>
             </Card>
           ) : (
             filteredGames.map((game) => (
-              <Card key={game.id} className="p-6">
+              <Card key={game.id} className="p-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="text-4xl">{getGameIcon(game.gameType)}</div>
+                  <div className="flex items-center gap-3">
+                    <div className="text-2xl">{getGameIcon(game.gameType)}</div>
                     <div>
-                      <h3 className="text-xl font-bold text-white capitalize">
+                      <h3 className="text-base font-bold text-white capitalize luckiest-guy">
                         {game.gameType.replace('-', ' ')}
                       </h3>
-                      <p className="text-gray-300">{game.date}</p>
+                      <p className="text-gray-300 text-xs poppins">{game.date}</p>
                     </div>
                   </div>
                   
                   <div className="text-right">
-                    <div className={`text-lg font-bold ${getResultColor(game.result)}`}>
+                    <div className={`text-sm font-bold ${getResultColor(game.result)} luckiest-guy`}>
                       {getResultText(game.result)}
                     </div>
-                    <div className="text-gray-300 text-sm">
-                      {game.duration} • Score: {game.score}
+                    <div className="text-gray-300 text-xs poppins">
+                      {game.duration} • {game.score}
                       {game.opponentScore && ` vs ${game.opponentScore}`}
                     </div>
                   </div>
                   
                   <div className="text-right">
                     {game.chipsWon > 0 && (
-                      <div className="text-green-400 font-bold">+{game.chipsWon} chips</div>
+                      <div className="text-green-400 font-bold text-sm luckiest-guy">+{game.chipsWon}</div>
                     )}
                     {game.chipsLost > 0 && (
-                      <div className="text-red-400 font-bold">-{game.chipsLost} chips</div>
+                      <div className="text-red-400 font-bold text-sm luckiest-guy">-{game.chipsLost}</div>
                     )}
                     {game.chipsWon === 0 && game.chipsLost === 0 && (
-                      <div className="text-gray-400">No chips</div>
+                      <div className="text-gray-400 text-xs poppins">No chips</div>
                     )}
                   </div>
                 </div>
@@ -217,11 +220,11 @@ export const GamesHistory: React.FC = () => {
         </div>
 
         {/* Back Button */}
-        <div className="mt-8 text-center">
+        <div className="mt-6 text-center">
           <Button
             variant="secondary"
             onClick={() => navigate('/main-menu')}
-            size="lg"
+            size="md"
           >
             ← Back to Main Menu
           </Button>

@@ -16,16 +16,16 @@ export const Navigation: React.FC = () => {
   ];
 
   return (
-    <div className="fixed top-4 left-4 z-50 bg-black/50 backdrop-blur-sm rounded-lg p-4">
-      <h3 className="text-white font-bold mb-3">Dev Navigation</h3>
-      <div className="flex flex-wrap gap-2">
+    <div className="fixed top-2 left-2 z-50 glass rounded-lg p-2 max-w-xs">
+      <h3 className="text-white font-bold mb-2 text-sm luckiest-guy">Dev Nav</h3>
+      <div className="grid grid-cols-2 gap-1">
         {routes.map((route) => (
           <Button
             key={route.path}
             variant="secondary"
             size="sm"
             onClick={() => navigate(route.path)}
-            className="text-xs"
+            className="text-xs px-2 py-1"
           >
             {route.label}
           </Button>
