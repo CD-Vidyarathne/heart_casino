@@ -60,7 +60,7 @@ export const MainMenuScreen: React.FC = () => {
                 key={option.id}
                 variant={option.variant}
                 size="lg"
-                className="w-full text-4xl"
+                className="w-full text-2xl"
                 onClick={() => option.action()}
               >
                 {option.title}

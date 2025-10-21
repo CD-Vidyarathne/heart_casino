@@ -1,4 +1,5 @@
 import React from 'react';
+import { cn } from '../lib/utils';
 
 interface GenderToggleProps {
   selectedGender: 'male' | 'female';
@@ -12,7 +13,7 @@ export const GenderToggle: React.FC<GenderToggleProps> = ({
   className = '',
 }) => {
   return (
-    <div className={`w-full ${className}`}>
+    <div className={cn('w-full', className)}>
       <label className="block text-sm font-medium text-white mb-3 poppins-medium">
         Gender
       </label>
@@ -20,26 +21,24 @@ export const GenderToggle: React.FC<GenderToggleProps> = ({
         <button
           type="button"
           onClick={() => onGenderChange('male')}
-          className={`
-            flex-1 py-2 px-3 rounded-md font-medium transition-all duration-200 poppins-medium
-            ${selectedGender === 'male'
+          className={cn(
+            'flex-1 py-2 px-3 rounded-md font-medium transition-all duration-200 poppins-medium',
+            selectedGender === 'male'
               ? 'bg-purple-600 text-white shadow-lg'
               : 'text-gray-300 hover:text-white hover:bg-white/10'
-            }
-          `}
+          )}
         >
           ♂ Male
         </button>
         <button
           type="button"
           onClick={() => onGenderChange('female')}
-          className={`
-            flex-1 py-2 px-3 rounded-md font-medium transition-all duration-200 poppins-medium
-            ${selectedGender === 'female'
+          className={cn(
+            'flex-1 py-2 px-3 rounded-md font-medium transition-all duration-200 poppins-medium',
+            selectedGender === 'female'
               ? 'bg-purple-600 text-white shadow-lg'
               : 'text-gray-300 hover:text-white hover:bg-white/10'
-            }
-          `}
+          )}
         >
           ♀ Female
         </button>

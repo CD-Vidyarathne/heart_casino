@@ -1,5 +1,6 @@
 import React from 'react';
 import { ASSETS } from '../assetPaths';
+import { cn } from '../lib/utils';
 
 interface AvatarSelectorProps {
   selectedAvatar: string;
@@ -17,7 +18,7 @@ export const AvatarSelector: React.FC<AvatarSelectorProps> = ({
   const avatars = gender === 'male' ? ASSETS.AVATARS.MALE : ASSETS.AVATARS.FEMALE;
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className={cn('w-full', className)}>
       <label className="block text-sm font-medium text-white mb-3 poppins-medium">
         Choose Your Avatar
       </label>
@@ -25,13 +26,12 @@ export const AvatarSelector: React.FC<AvatarSelectorProps> = ({
         {avatars.map((avatar, index) => (
           <div
             key={index}
-            className={`
-              w-12 h-12 rounded-full border-3 cursor-pointer transition-all duration-200
-              ${selectedAvatar === avatar 
+            className={cn(
+              'w-12 h-12 rounded-full border-3 cursor-pointer transition-all duration-200',
+              selectedAvatar === avatar 
                 ? 'border-purple-400 ring-3 ring-purple-400/30 scale-110' 
                 : 'border-gray-400 hover:border-purple-300 hover:scale-105'
-              }
-            `}
+            )}
             onClick={() => onSelectAvatar(avatar)}
           >
             <img
