@@ -240,6 +240,13 @@ This architecture demonstrates all four principles through:
 
 The design supports your casino concept while providing a solid foundation for the academic demonstration of these software engineering principles.
 
+High Cohesion Modules:
+BlackJack Engine Module - All blackjack logic, card dealing, scoring
+User Profile Module - Authentication, balance, game history
+AI Opponent Module - Gambling behavior patterns, decision making
+Heart Game Module - Logic puzzle integration, scoring system
+Event System Module - Game events, notifications, state changes
+
 
 /cdv/apps/heart_casino/src
   ├─ main/
@@ -328,3 +335,50 @@ The design supports your casino concept while providing a solid foundation for t
   └─ resources/
      ├─ build/
      └─ public/
+
+```
+interface GameEvents {
+  'user:authenticated': { user: User };
+  'game:started': { gameId: string, players: Player[] };
+  'game:card-dealt': { playerId: string, card: Card };
+  'game:hand-completed': { playerId: string, result: GameResult };
+  'balance:updated': { userId: string, newBalance: number };
+  'heart-game:triggered': { userId: string, puzzle: HeartPuzzle };
+  'heart-game:completed': { userId: string, success: boolean };
+}
+
+Event-Driven Game Flow:
+User Authentication → user:authenticated event
+Game Start → game:started event triggers UI updates
+Card Dealing → game:card-dealt events update all clients
+Hand Completion → game:hand-completed triggers balance updates
+Balance Zero → balance:zero event triggers Heart Game
+Heart Game Success → heart-game:completed restores balance
+```
+
+Identity Management Features:
+Profile Customization - Avatars, themes, display names
+Game History - Detailed records of all games played
+
+🏛️ Detailed Architecture Components
+Core Game Modules:
+BlackjackEngine
+Card dealing and shuffling
+Hand evaluation and scoring
+Game state management
+Win/loss determination
+AIOpponentSystem
+Multiple AI personalities (conservative, aggressive, random)
+Decision-making algorithms
+Realistic gambling behavior patterns
+Difficulty scaling
+HeartGameIntegration
+Puzzle fetching from API
+Solution validation
+Progress tracking
+Reward calculation
+UserManagement
+Authentication with Supabase
+Profile management
+Balance tracking
+Game history storage
