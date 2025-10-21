@@ -34,7 +34,6 @@
   height: 100%;
 }
 
-/* Font Classes */
 .rubik-puddles {
   font-family: "Rubik Puddles", system-ui;
   font-weight: 400;
@@ -71,7 +70,6 @@
   font-style: normal;
 }
 
-/* Responsive container for 9:16 aspect ratio */
 .screen-container {
   width: 100vw;
   height: 100vh;
@@ -89,9 +87,11 @@
   padding: 1rem;
   overflow-y: auto;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-/* Glass morphism effects */
 .glass {
   background: var(--color-bg-glass);
   backdrop-filter: blur(10px);
@@ -103,7 +103,6 @@
   backdrop-filter: blur(15px);
 }
 
-/* Custom scrollbar for mobile-like experience */
 .screen-content::-webkit-scrollbar {
   width: 4px;
 }
