@@ -26,11 +26,12 @@
 }
 
 .background {
-  background-image: url("../resources/public/main_bg.png");
+  background-image: url("/main_bg.png");
   background-size: cover;
   background-position: center;
-  min-height: 100vh;
-  width: 100vw;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
 }
 
 /* Font Classes */
@@ -70,13 +71,16 @@
   font-style: normal;
 }
 
-/* Custom utility classes for 480x854 resolution */
+/* Responsive container for 9:16 aspect ratio */
 .screen-container {
-  width: 480px;
-  height: 854px;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
   margin: 0 auto;
   overflow: hidden;
   position: relative;
+  aspect-ratio: 9 / 16;
 }
 
 .screen-content {
