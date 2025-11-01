@@ -2,7 +2,6 @@ export interface HeartPuzzle {
   question: string;
   solution: number;
   carrots: number;
-  isBase64: boolean;
 }
 
 export interface HeartGameResult {

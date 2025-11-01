@@ -1,24 +1,10 @@
 import { ipcMain } from 'electron';
 import { IPC_CHANNELS } from '../../shared/channels';
 import { heartGameService } from '../services/heart/heartService';
-
-interface HeartPuzzle {
-  question: string;
-  solution: number;
-  carrots: number;
-  isBase64: boolean;
-}
-
-interface ValidateSolutionRequest {
-  puzzle: HeartPuzzle;
-  userSolution: number;
-}
-
-interface ValidateSolutionResponse {
-  isCorrect: boolean;
-  reward: number;
-  correctSolution: number;
-}
+import {
+  ValidateSolutionRequest,
+  ValidateSolutionResponse,
+} from 'shared/heartGameTypes';
 
 export function registerHeartHandlers() {
   ipcMain.handle(IPC_CHANNELS.HEART.FETCH_PUZZLE, async (_event) => {

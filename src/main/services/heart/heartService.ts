@@ -3,7 +3,7 @@ import { HeartPuzzle, HeartAPIResponse } from 'shared/heartGameTypes';
 export class HeartGameService {
   private baseUrl = 'http://marcconrad.com/uob/heart/api.php';
 
-  async fetchPuzzle(useBase64: boolean = true): Promise<HeartPuzzle> {
+  async fetchPuzzle(): Promise<HeartPuzzle> {
     try {
       const url = `${this.baseUrl}`;
 
@@ -24,7 +24,6 @@ export class HeartGameService {
         question: data.question,
         solution: data.solution,
         carrots: data.carrots,
-        isBase64: useBase64,
       };
     } catch (error) {
       console.error('Failed to fetch Heart puzzle:', error);
