@@ -27,7 +27,7 @@ export const Button: React.FC<ButtonProps> = ({
   type = 'button',
 }) => {
   const baseClasses =
-    'luckiest-guy rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 border-2';
+    'luckiest-guy cursor-pointer rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 border-2';
 
   const variantClasses = {
     primary:
