@@ -15,6 +15,7 @@ export async function MainWindow() {
     movable: true,
     alwaysOnTop: false,
     autoHideMenuBar: true,
+    resizable: false,
 
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),

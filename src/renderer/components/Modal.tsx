@@ -40,23 +40,17 @@ export const Modal: React.FC<ModalProps> = ({
     >
       <div className="glass rounded-xl border border-purple-400/30 shadow-2xl max-w-sm w-full mx-4">
         <div className="p-4">
-          <h2 className="text-xl font-bold text-white mb-4 luckiest-guy">{title}</h2>
+          <h2 className="text-xl font-bold text-white mb-4 luckiest-guy">
+            {title}
+          </h2>
           <div className="mb-4">{children}</div>
           {showActions && (
             <div className="flex gap-2 justify-end">
-              <Button
-                variant="cancel"
-                onClick={onCancel || onClose}
-                size="sm"
-              >
+              <Button variant="cancel" onClick={onCancel || onClose} size="sm">
                 {cancelText}
               </Button>
               {onConfirm && (
-                <Button
-                  variant="confirm"
-                  onClick={onConfirm}
-                  size="sm"
-                >
+                <Button variant="confirm" onClick={onConfirm} size="sm">
                   {confirmText}
                 </Button>
               )}

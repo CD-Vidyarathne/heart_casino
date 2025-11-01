@@ -6,33 +6,35 @@ export const LoginScreen: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {}
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
-    
+
     if (!email) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       newErrors.email = 'Please enter a valid email';
     }
-    
+
     if (!password) {
       newErrors.password = 'Password is required';
     } else if (password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleLogin = async () => {
     if (!validateForm()) return;
-    
+
     setIsLoading(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
@@ -48,12 +50,18 @@ export const LoginScreen: React.FC = () => {
     <div className="screen-container">
       <div className="screen-content flex items-center justify-center">
         <Card className="w-full p-6">
-          <TitleBar 
-            title="Welcome Back!" 
+          <TitleBar
+            title="Welcome Back!"
             subtitle="Sign in to your casino account"
           />
-          
-          <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} className="space-y-4">
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleLogin();
+            }}
+            className="space-y-4"
+          >
             <Input
               type="email"
               label="Email"
@@ -63,7 +71,7 @@ export const LoginScreen: React.FC = () => {
               error={errors.email}
               required
             />
-            
+
             <Input
               type="password"
               label="Password"
@@ -73,7 +81,7 @@ export const LoginScreen: React.FC = () => {
               error={errors.password}
               required
             />
-            
+
             <Button
               type="submit"
               variant="primary"
@@ -84,9 +92,11 @@ export const LoginScreen: React.FC = () => {
               {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
           </form>
-          
+
           <div className="mt-4 text-center">
-            <p className="text-gray-300 mb-3 text-sm poppins">Don't have an account?</p>
+            <p className="text-gray-300 mb-3 text-sm poppins">
+              Don't have an account?
+            </p>
             <Button
               variant="secondary"
               onClick={handleRegister}

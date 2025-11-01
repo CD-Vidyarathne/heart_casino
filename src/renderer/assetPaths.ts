@@ -3,7 +3,7 @@ export const ASSETS = {
   MAIN_LOGO_NO_BG: '/main_logo_without_bg.png',
   MAIN_BG: '/main_bg.png',
   ILLUSTRATION: '/illustration.svg',
-  
+
   AVATARS: {
     MALE: [
       '/male_avatars/1.png',

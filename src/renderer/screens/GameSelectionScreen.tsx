@@ -15,16 +15,17 @@ const games: GameInfo[] = [
   {
     id: 'blackjack',
     name: 'Blackjack',
-    description: 'Beat the dealer by getting as close to 21 as possible without going over.',
+    description:
+      'Beat the dealer by getting as close to 21 as possible without going over.',
     icon: '🃏',
     color: 'from-green-600 to-green-700',
     rules: [
       'Get as close to 21 as possible without going over',
       'Face cards (J, Q, K) are worth 10 points',
       'Aces can be worth 1 or 11 points',
-      'Beat the dealer\'s hand to win',
-      'Blackjack (21 with first two cards) pays 3:2'
-    ]
+      "Beat the dealer's hand to win",
+      'Blackjack (21 with first two cards) pays 3:2',
+    ],
   },
   {
     id: 'heart-game',
@@ -37,9 +38,9 @@ const games: GameInfo[] = [
       'Avoid the Queen of Spades (13 penalty points)',
       'Hearts are worth 1 point each',
       'Lowest score wins the round',
-      'Game ends when someone reaches 100 points'
-    ]
-  }
+      'Game ends when someone reaches 100 points',
+    ],
+  },
 ];
 
 export const GameSelectionScreen: React.FC = () => {
@@ -59,12 +60,12 @@ export const GameSelectionScreen: React.FC = () => {
   return (
     <div className="screen-container">
       <div className="screen-content">
-        <TitleBar 
-          title="Choose Your Game" 
+        <TitleBar
+          title="Choose Your Game"
           subtitle="Select a game to start playing"
           className="mb-6"
         />
-        
+
         <div className="space-y-4">
           {games.map((game) => (
             <Card
@@ -75,15 +76,15 @@ export const GameSelectionScreen: React.FC = () => {
               <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
                 {game.icon}
               </div>
-              
+
               <h3 className="text-xl font-bold text-white mb-3 luckiest-guy">
                 {game.name}
               </h3>
-              
+
               <p className="text-gray-300 mb-4 text-sm poppins">
                 {game.description}
               </p>
-              
+
               <div className="flex gap-2 justify-center">
                 <Button
                   variant="secondary"
@@ -97,7 +98,7 @@ export const GameSelectionScreen: React.FC = () => {
                   <span>ℹ️</span>
                   Rules
                 </Button>
-                
+
                 <Button
                   variant="primary"
                   onClick={() => handleGameSelect(game)}
@@ -110,18 +111,14 @@ export const GameSelectionScreen: React.FC = () => {
             </Card>
           ))}
         </div>
-        
+
         <div className="mt-6 text-center">
-          <Button
-            variant="secondary"
-            onClick={handleBack}
-            size="md"
-          >
+          <Button variant="secondary" onClick={handleBack} size="md">
             ← Back to Main Menu
           </Button>
         </div>
       </div>
-      
+
       <Modal
         isOpen={showRules}
         onClose={() => setShowRules(false)}
@@ -132,7 +129,9 @@ export const GameSelectionScreen: React.FC = () => {
           <div className="space-y-4">
             <p className="text-gray-300 mb-6">{selectedGame.description}</p>
             <div>
-              <h4 className="text-lg font-semibold text-white mb-3">How to Play:</h4>
+              <h4 className="text-lg font-semibold text-white mb-3">
+                How to Play:
+              </h4>
               <ul className="space-y-2">
                 {selectedGame.rules.map((rule, index) => (
                   <li key={index} className="text-gray-300 flex items-start">

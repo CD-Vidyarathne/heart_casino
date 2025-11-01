@@ -47,9 +47,7 @@ export const Input: React.FC<InputProps> = ({
           disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-purple-300'
         )}
       />
-      {error && (
-        <p className="mt-1 text-sm text-red-400 poppins">{error}</p>
-      )}
+      {error && <p className="mt-1 text-sm text-red-400 poppins">{error}</p>}
     </div>
   );
 };

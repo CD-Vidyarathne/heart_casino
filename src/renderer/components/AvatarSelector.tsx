@@ -15,7 +15,8 @@ export const AvatarSelector: React.FC<AvatarSelectorProps> = ({
   gender,
   className = '',
 }) => {
-  const avatars = gender === 'male' ? ASSETS.AVATARS.MALE : ASSETS.AVATARS.FEMALE;
+  const avatars =
+    gender === 'male' ? ASSETS.AVATARS.MALE : ASSETS.AVATARS.FEMALE;
 
   return (
     <div className={cn('w-full', className)}>
@@ -28,8 +29,8 @@ export const AvatarSelector: React.FC<AvatarSelectorProps> = ({
             key={index}
             className={cn(
               'w-12 h-12 rounded-full border-3 cursor-pointer transition-all duration-200',
-              selectedAvatar === avatar 
-                ? 'border-purple-400 ring-3 ring-purple-400/30 scale-110' 
+              selectedAvatar === avatar
+                ? 'border-purple-400 ring-3 ring-purple-400/30 scale-110'
                 : 'border-gray-400 hover:border-purple-300 hover:scale-105'
             )}
             onClick={() => onSelectAvatar(avatar)}

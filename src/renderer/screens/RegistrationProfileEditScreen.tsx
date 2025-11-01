@@ -1,25 +1,34 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Input, Card, TitleBar, GenderToggle, AvatarSelector } from '../components';
+import {
+  Button,
+  Input,
+  Card,
+  TitleBar,
+  GenderToggle,
+  AvatarSelector,
+} from '../components';
 import { ASSETS } from '../assetPaths';
 
 export const RegistrationProfileEditScreen: React.FC = () => {
   const navigate = useNavigate();
   const [displayName, setDisplayName] = useState('');
   const [gender, setGender] = useState<'male' | 'female'>('male');
-  const [selectedAvatar, setSelectedAvatar] = useState<string>(ASSETS.AVATARS.MALE[0]);
+  const [selectedAvatar, setSelectedAvatar] = useState<string>(
+    ASSETS.AVATARS.MALE[0]
+  );
   const [errors, setErrors] = useState<{ displayName?: string }>({});
   const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
     const newErrors: { displayName?: string } = {};
-    
+
     if (!displayName.trim()) {
       newErrors.displayName = 'Display name is required';
     } else if (displayName.trim().length < 2) {
       newErrors.displayName = 'Display name must be at least 2 characters';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -27,15 +36,16 @@ export const RegistrationProfileEditScreen: React.FC = () => {
   const handleGenderChange = (newGender: 'male' | 'female') => {
     setGender(newGender);
     // Auto-select first avatar of the new gender
-    const avatars = newGender === 'male' ? ASSETS.AVATARS.MALE : ASSETS.AVATARS.FEMALE;
+    const avatars =
+      newGender === 'male' ? ASSETS.AVATARS.MALE : ASSETS.AVATARS.FEMALE;
     setSelectedAvatar(avatars[0]);
   };
 
   const handleComplete = async () => {
     if (!validateForm()) return;
-    
+
     setIsLoading(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
@@ -47,12 +57,18 @@ export const RegistrationProfileEditScreen: React.FC = () => {
     <div className="screen-container">
       <div className="screen-content">
         <Card className="w-full p-6">
-          <TitleBar 
-            title="Complete Your Profile" 
+          <TitleBar
+            title="Complete Your Profile"
             subtitle="Tell us about yourself to personalize your experience"
           />
-          
-          <form onSubmit={(e) => { e.preventDefault(); handleComplete(); }} className="space-y-6">
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleComplete();
+            }}
+            className="space-y-6"
+          >
             <Input
               type="text"
               label="Display Name"
@@ -62,18 +78,18 @@ export const RegistrationProfileEditScreen: React.FC = () => {
               error={errors.displayName}
               required
             />
-            
+
             <GenderToggle
               selectedGender={gender}
               onGenderChange={handleGenderChange}
             />
-            
+
             <AvatarSelector
               selectedAvatar={selectedAvatar}
               onSelectAvatar={setSelectedAvatar}
               gender={gender}
             />
-            
+
             <div className="flex gap-3 pt-4">
               <Button
                 type="button"

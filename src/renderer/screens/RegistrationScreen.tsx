@@ -7,47 +7,47 @@ export const RegistrationScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [errors, setErrors] = useState<{ 
-    email?: string; 
-    password?: string; 
-    confirmPassword?: string; 
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
   }>({});
   const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
-    const newErrors: { 
-      email?: string; 
-      password?: string; 
-      confirmPassword?: string; 
+    const newErrors: {
+      email?: string;
+      password?: string;
+      confirmPassword?: string;
     } = {};
-    
+
     if (!email) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       newErrors.email = 'Please enter a valid email';
     }
-    
+
     if (!password) {
       newErrors.password = 'Password is required';
     } else if (password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
     }
-    
+
     if (!confirmPassword) {
       newErrors.confirmPassword = 'Please confirm your password';
     } else if (password !== confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleRegister = async () => {
     if (!validateForm()) return;
-    
+
     setIsLoading(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
@@ -63,12 +63,18 @@ export const RegistrationScreen: React.FC = () => {
     <div className="screen-container">
       <div className="screen-content flex items-center justify-center">
         <Card className="w-full p-6">
-          <TitleBar 
-            title="Join the Casino!" 
+          <TitleBar
+            title="Join the Casino!"
             subtitle="Create your account to start playing"
           />
-          
-          <form onSubmit={(e) => { e.preventDefault(); handleRegister(); }} className="space-y-4">
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleRegister();
+            }}
+            className="space-y-4"
+          >
             <Input
               type="email"
               label="Email"
@@ -78,7 +84,7 @@ export const RegistrationScreen: React.FC = () => {
               error={errors.email}
               required
             />
-            
+
             <Input
               type="password"
               label="Password"
@@ -88,7 +94,7 @@ export const RegistrationScreen: React.FC = () => {
               error={errors.password}
               required
             />
-            
+
             <Input
               type="password"
               label="Confirm Password"
@@ -98,7 +104,7 @@ export const RegistrationScreen: React.FC = () => {
               error={errors.confirmPassword}
               required
             />
-            
+
             <Button
               type="submit"
               variant="primary"
@@ -109,9 +115,11 @@ export const RegistrationScreen: React.FC = () => {
               {isLoading ? 'Creating Account...' : 'Create Account'}
             </Button>
           </form>
-          
+
           <div className="mt-4 text-center">
-            <p className="text-gray-300 mb-3 text-sm poppins">Already have an account?</p>
+            <p className="text-gray-300 mb-3 text-sm poppins">
+              Already have an account?
+            </p>
             <Button
               variant="secondary"
               onClick={handleLogin}
