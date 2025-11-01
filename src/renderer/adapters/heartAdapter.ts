@@ -1,3 +1,4 @@
+import { IPC_CHANNELS } from 'shared/channels';
 import type {
   HeartPuzzle,
   HeartGameResult,
@@ -6,10 +7,9 @@ import type {
 
 export class HeartGameAdapter {
   static async fetchPuzzle(): Promise<HeartPuzzle> {
-    const response =
-      await window.electron.ipcRenderer.invoke<APIResponse<HeartPuzzle>>(
-        'heart:fetch-puzzle'
-      );
+    const response = await window.electron.ipcRenderer.invoke<
+      APIResponse<HeartPuzzle>
+    >(IPC_CHANNELS.HEART.FETCH_PUZZLE);
 
     if (!response.success || !response.data) {
       throw new Error(response.error || 'Failed to fetch puzzle');
@@ -24,7 +24,7 @@ export class HeartGameAdapter {
   ): Promise<HeartGameResult> {
     const response = await window.electron.ipcRenderer.invoke<
       APIResponse<HeartGameResult>
-    >('heart:validate-solution', { puzzle, userSolution });
+    >(IPC_CHANNELS.HEART.VALIDATE_SOLUTION, { puzzle, userSolution });
 
     if (!response.success || !response.data) {
       throw new Error(response.error || 'Failed to validate solution');

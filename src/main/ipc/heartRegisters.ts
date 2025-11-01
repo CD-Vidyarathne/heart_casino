@@ -1,4 +1,5 @@
 import { ipcMain } from 'electron';
+import { IPC_CHANNELS } from '../../shared/channels';
 import { heartGameService } from '../services/heart/heartService';
 
 interface HeartPuzzle {
@@ -20,7 +21,7 @@ interface ValidateSolutionResponse {
 }
 
 export function registerHeartHandlers() {
-  ipcMain.handle('heart:fetch-puzzle', async (_event) => {
+  ipcMain.handle(IPC_CHANNELS.HEART.FETCH_PUZZLE, async (_event) => {
     try {
       const puzzle = await heartGameService.fetchPuzzle();
       return { success: true, data: puzzle };
@@ -34,7 +35,7 @@ export function registerHeartHandlers() {
   });
 
   ipcMain.handle(
-    'heart:validate-solution',
+    IPC_CHANNELS.HEART.VALIDATE_SOLUTION,
     async (_event, request: ValidateSolutionRequest) => {
       try {
         const isCorrect = heartGameService.validateSolution(

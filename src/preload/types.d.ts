@@ -1,4 +1,3 @@
-// src/preload/types.d.ts
 import type { ElectronHandler } from './index';
 
 declare global {
