@@ -1,6 +1,6 @@
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import type { Channel } from '../main/ipc/channels';
+import type { Channel } from '../main/ipc/channels.ts';
 
 export type Channels = Channel;
 

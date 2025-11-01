@@ -4,6 +4,7 @@ import { Button, Card, TitleBar, Modal } from '../components';
 
 interface GameInfo {
   id: string;
+  available: boolean;
   name: string;
   description: string;
   icon: string;
@@ -14,6 +15,7 @@ interface GameInfo {
 const games: GameInfo[] = [
   {
     id: 'blackjack',
+    available: false,
     name: 'Blackjack',
     description:
       'Beat the dealer by getting as close to 21 as possible without going over.',
@@ -29,16 +31,15 @@ const games: GameInfo[] = [
   },
   {
     id: 'heart-game',
+    available: true,
     name: 'Heart Game',
-    description: 'A unique card game where you collect hearts to win.',
+    description: 'A unique card game where you count hearts to win.',
     icon: '❤️',
     color: 'from-red-600 to-red-700',
     rules: [
-      'Collect as many hearts as possible',
-      'Avoid the Queen of Spades (13 penalty points)',
-      'Hearts are worth 1 point each',
-      'Lowest score wins the round',
-      'Game ends when someone reaches 100 points',
+      'Study the image carefully to find the pattern',
+      'Submit the number of hearts as the answer.',
+      'Correct answers earn you bonus coins!',
     ],
   },
 ];
@@ -49,8 +50,19 @@ export const GameSelectionScreen: React.FC = () => {
   const [showRules, setShowRules] = useState(false);
 
   const handleGameSelect = (game: GameInfo) => {
-    // For now, just show an alert. In a real app, this would start the game
-    alert(`Starting ${game.name}! (Game implementation coming soon)`);
+    if (!game.available) {
+      alert(`${game.name} is coming soon! Stay tuned.`);
+      return;
+    }
+
+    switch (game.id) {
+      case 'blackjack':
+        navigate('/blackjack');
+        break;
+      case 'heart-game':
+        navigate('/heart-game');
+        break;
+    }
   };
 
   const handleBack = () => {

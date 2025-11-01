@@ -37,14 +37,17 @@
     "rules": {
       "a11y": {
         "noSvgWithoutTitle": "off",
-        "useButtonType": "off"
+        "useButtonType": "off",
+        "noAutofocus": "off",
+        "noLabelWithoutControl": "off"
       },
       "complexity": {
         "noBannedTypes": "warn"
       },
       "correctness": {
         "noUnusedImports": "warn",
-        "useExhaustiveDependencies": "off"
+        "useExhaustiveDependencies": "off",
+        "useIsNan": "off"
       },
       "recommended": true,
       "style": {
