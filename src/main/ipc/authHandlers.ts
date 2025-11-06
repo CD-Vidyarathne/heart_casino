@@ -60,11 +60,23 @@ export function registerAuthHandlers() {
 
   ipcMain.handle(
     IPC_CHANNELS.AUTH.UPDATE_PROFILE,
-    async (_event, userId: string, profileData: any) => {
+    async (
+      _event,
+      userId: string,
+      profileData: any,
+      session?: { access_token: string; refresh_token?: string }
+    ) => {
       try {
-        const data = await authService.updateProfile(userId, profileData);
+        console.log('Updating profile for user:', userId, 'with data:', profileData);
+        const data = await authService.updateProfile(
+          userId,
+          profileData,
+          session
+        );
+        console.log('Profile update successful:', data);
         return { success: true, data };
       } catch (error) {
+        console.error('Profile update error:', error);
         return {
           success: false,
           error:

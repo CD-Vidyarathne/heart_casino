@@ -1,5 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from 'react';
 import { AuthAdapter } from '../adapters/authAdapter';
 
 interface AuthContextType {
@@ -17,16 +22,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<any | null>(null);
   const [user, setUser] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
 
-  const refreshSession = async () => {
+  const refreshSession = useCallback(async () => {
     try {
       const currentSession = await AuthAdapter.getSession();
       setSession(currentSession);
 
       if (currentSession?.user) {
         setUser(currentSession.user);
-        // Update localStorage
         localStorage.setItem('session', JSON.stringify(currentSession));
         localStorage.setItem('user', JSON.stringify(currentSession.user));
       } else {
@@ -43,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const signOut = async () => {
     try {
@@ -52,7 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(null);
       localStorage.removeItem('session');
       localStorage.removeItem('user');
-      navigate('/login');
+      // Navigation will be handled by ProtectedRoute when it detects user is not authenticated
     } catch (error) {
       console.error('Failed to sign out:', error);
     }
@@ -80,7 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } else {
       setIsLoading(false);
     }
-  }, []);
+  }, [refreshSession]);
 
   const value: AuthContextType = {
     session,

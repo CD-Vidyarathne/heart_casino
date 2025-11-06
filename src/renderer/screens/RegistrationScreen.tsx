@@ -49,10 +49,18 @@ export const RegistrationScreen: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const { user } = await AuthAdapter.signUp(email, password);
+      const signUpResponse = await AuthAdapter.signUp(email, password);
 
-      if (user) {
-        sessionStorage.setItem('temp_user', JSON.stringify(user));
+      // Store both user and session if available
+      if (signUpResponse?.user) {
+        sessionStorage.setItem('temp_user', JSON.stringify(signUpResponse.user));
+      }
+      
+      // Store session if available (Supabase might auto-sign in after signup)
+      if (signUpResponse?.session) {
+        sessionStorage.setItem('temp_session', JSON.stringify(signUpResponse.session));
+        localStorage.setItem('session', JSON.stringify(signUpResponse.session));
+        localStorage.setItem('user', JSON.stringify(signUpResponse.user));
       }
 
       navigate('/register-profile');

@@ -63,12 +63,14 @@ export class AuthAdapter {
       display_name: string;
       gender: string;
       avatar: string;
-    }
+    },
+    session?: { access_token: string; refresh_token?: string }
   ) {
     const response = await window.electron.ipcRenderer.invoke<AuthResponse<any>>(
       IPC_CHANNELS.AUTH.UPDATE_PROFILE,
       userId,
-      profileData
+      profileData,
+      session
     );
 
     if (!response.success) {

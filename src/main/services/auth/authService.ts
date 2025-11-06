@@ -1,13 +1,52 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.SUPABASE_URL as string;
-const supabaseKey = process.env.SUPABASE_ANON_KEY as string;
+function getSupabaseClient(): SupabaseClient {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error(
+      'Supabase configuration missing. Please set SUPABASE_URL and SUPABASE_ANON_KEY in your .env file.'
+    );
+  }
+
+  return createClient(supabaseUrl, supabaseKey);
+}
+
+async function getSupabaseClientWithSession(
+  session: { access_token: string; refresh_token?: string }
+): Promise<SupabaseClient> {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error(
+      'Supabase configuration missing. Please set SUPABASE_URL and SUPABASE_ANON_KEY in your .env file.'
+    );
+  }
+
+  const client = createClient(supabaseUrl, supabaseKey);
+  // Set the session for this client - setSession is async
+  try {
+    await client.auth.setSession({
+      access_token: session.access_token,
+      refresh_token: session.refresh_token || '',
+    });
+  } catch (error) {
+    console.error('Failed to set session on Supabase client:', error);
+    throw error;
+  }
+
+  return client;
+}
 
 export class AuthService {
+  private get supabase() {
+    return getSupabaseClient();
+  }
+
   async signUp(email: string, password: string) {
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await this.supabase.auth.signUp({
       email,
       password,
     });
@@ -17,7 +56,7 @@ export class AuthService {
   }
 
   async signIn(email: string, password: string) {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await this.supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -27,12 +66,12 @@ export class AuthService {
   }
 
   async signOut() {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await this.supabase.auth.signOut();
     if (error) throw error;
   }
 
   async getSession() {
-    const { data, error } = await supabase.auth.getSession();
+    const { data, error } = await this.supabase.auth.getSession();
     if (error) throw error;
     return data.session;
   }
@@ -43,9 +82,15 @@ export class AuthService {
       display_name: string;
       gender: string;
       avatar: string;
-    }
+    },
+    session?: { access_token: string; refresh_token?: string }
   ) {
-    const { data, error } = await supabase.from('profiles').upsert(
+    // If session is provided, set it on the client for this request
+    const client = session
+      ? await getSupabaseClientWithSession(session)
+      : this.supabase;
+
+    const { data, error } = await client.from('profiles').upsert(
       {
         id: userId,
         ...profileData,
@@ -56,7 +101,10 @@ export class AuthService {
       }
     );
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase profile update error:', error);
+      throw error;
+    }
     return data;
   }
 }

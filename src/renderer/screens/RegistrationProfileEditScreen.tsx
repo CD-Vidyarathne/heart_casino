@@ -56,23 +56,61 @@ export const RegistrationProfileEditScreen: React.FC = () => {
 
       const tempUser = JSON.parse(tempUserStr);
 
-      await AuthAdapter.updateProfile(tempUser.id, {
-        display_name: displayName,
-        gender: gender,
-        avatar: selectedAvatar,
-      });
+      // Try to get session from sessionStorage first (stored during signup)
+      let session: any = null;
+      const tempSessionStr = sessionStorage.getItem('temp_session');
+      if (tempSessionStr) {
+        try {
+          session = JSON.parse(tempSessionStr);
+        } catch (e) {
+          console.warn('Failed to parse temp session');
+        }
+      }
 
-      const session = await AuthAdapter.getSession();
+      // If no temp session, try to get current session
+      if (!session) {
+        session = await AuthAdapter.getSession();
+      }
+
+      // Prepare session object for profile update
+      const sessionForUpdate = session
+        ? {
+            access_token: session.access_token,
+            refresh_token: session.refresh_token,
+          }
+        : undefined;
+
+      console.log(
+        'Updating profile with userId:',
+        tempUser.id,
+        'session:',
+        sessionForUpdate ? 'present' : 'missing'
+      );
+
+      await AuthAdapter.updateProfile(
+        tempUser.id,
+        {
+          display_name: displayName,
+          gender: gender,
+          avatar: selectedAvatar,
+        },
+        sessionForUpdate
+      );
+
+      // Refresh session after profile update
+      session = await AuthAdapter.getSession();
       if (session) {
         localStorage.setItem('session', JSON.stringify(session));
         localStorage.setItem('user', JSON.stringify(tempUser));
       }
 
       sessionStorage.removeItem('temp_user');
+      sessionStorage.removeItem('temp_session');
       // Refresh auth context to update state
       await refreshSession();
       navigate('/main-menu');
     } catch (error) {
+      console.error('Profile update error:', error);
       setErrors({
         displayName:
           error instanceof Error ? error.message : 'Profile creation failed',
