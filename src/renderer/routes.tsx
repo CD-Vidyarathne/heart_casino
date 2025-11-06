@@ -1,4 +1,4 @@
-import { Route } from 'react-router-dom';
+import { Route, Navigate } from 'react-router-dom';
 
 import { Router } from 'lib/electron-router-dom';
 
@@ -9,27 +9,97 @@ import { RegistrationProfileEditScreen } from './screens/RegistrationProfileEdit
 import { GameSelectionScreen } from './screens/GameSelectionScreen';
 import { GamesHistory } from './screens/GamesHistory';
 import { ProfileEditScreen } from './screens/ProfileEditScreen';
-import { Navigation } from './components';
+import { Navigation, ProtectedRoute, PublicRoute } from './components';
 import { AppLayout } from './layout';
 import { HeartGameScreen } from './screens/HeartGameScreen';
+import { useAuth } from './contexts/AuthContext';
+
+function RootRedirect() {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="screen-container">
+        <div className="screen-content flex items-center justify-center">
+          <div className="text-white text-xl">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  return <Navigate to={isAuthenticated ? '/main-menu' : '/login'} replace />;
+}
 
 export function AppRoutes() {
   return (
     <Router
       main={
         <Route element={<AppLayout />}>
-          <Route element={<LoginScreen />} path="/login" />
-          <Route element={<RegistrationScreen />} path="/register" />
+          <Route element={<RootRedirect />} path="/" />
           <Route
-            element={<RegistrationProfileEditScreen />}
+            element={
+              <PublicRoute>
+                <LoginScreen />
+              </PublicRoute>
+            }
+            path="/login"
+          />
+          <Route
+            element={
+              <PublicRoute>
+                <RegistrationScreen />
+              </PublicRoute>
+            }
+            path="/register"
+          />
+          <Route
+            element={
+              <PublicRoute>
+                <RegistrationProfileEditScreen />
+              </PublicRoute>
+            }
             path="/register-profile"
           />
-          <Route element={<MainMenuScreen />} path="/main-menu" />
-          <Route element={<GameSelectionScreen />} path="/game-selection" />
-          <Route element={<HeartGameScreen />} path="/heart-game" />
-          <Route element={<GamesHistory />} path="/games-history" />
-          <Route element={<ProfileEditScreen />} path="/profile-edit" />
-          <Route element={<MainMenuScreen />} path="/" />
+          <Route
+            element={
+              <ProtectedRoute>
+                <MainMenuScreen />
+              </ProtectedRoute>
+            }
+            path="/main-menu"
+          />
+          <Route
+            element={
+              <ProtectedRoute>
+                <GameSelectionScreen />
+              </ProtectedRoute>
+            }
+            path="/game-selection"
+          />
+          <Route
+            element={
+              <ProtectedRoute>
+                <HeartGameScreen />
+              </ProtectedRoute>
+            }
+            path="/heart-game"
+          />
+          <Route
+            element={
+              <ProtectedRoute>
+                <GamesHistory />
+              </ProtectedRoute>
+            }
+            path="/games-history"
+          />
+          <Route
+            element={
+              <ProtectedRoute>
+                <ProfileEditScreen />
+              </ProtectedRoute>
+            }
+            path="/profile-edit"
+          />
         </Route>
       }
     />

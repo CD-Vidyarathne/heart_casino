@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.SUPABASE_URL || 'YOUR_SUPABASE_URL';
-const supabaseKey = process.env.SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY';
+const supabaseUrl = process.env.SUPABASE_URL as string;
+const supabaseKey = process.env.SUPABASE_ANON_KEY as string;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -45,18 +45,16 @@ export class AuthService {
       avatar: string;
     }
   ) {
-    const { data, error } = await supabase
-      .from('profiles')
-      .upsert(
-        {
-          id: userId,
-          ...profileData,
-          updated_at: new Date().toISOString(),
-        },
-        {
-          onConflict: 'id',
-        }
-      );
+    const { data, error } = await supabase.from('profiles').upsert(
+      {
+        id: userId,
+        ...profileData,
+        updated_at: new Date().toISOString(),
+      },
+      {
+        onConflict: 'id',
+      }
+    );
 
     if (error) throw error;
     return data;
@@ -64,4 +62,3 @@ export class AuthService {
 }
 
 export const authService = new AuthService();
-

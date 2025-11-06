@@ -6,3 +6,5 @@ export { Modal } from './Modal';
 export { AvatarSelector } from './AvatarSelector';
 export { GenderToggle } from './GenderToggle';
 export { Navigation } from './Navigation';
+export { ProtectedRoute } from './ProtectedRoute';
+export { PublicRoute } from './PublicRoute';

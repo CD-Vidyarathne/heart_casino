@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, Card, TitleBar } from '../components';
 import { AuthAdapter } from '../adapters/authAdapter';
+import { useAuth } from '../contexts/AuthContext';
 
 export const LoginScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { refreshSession } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
@@ -45,6 +47,8 @@ export const LoginScreen: React.FC = () => {
         localStorage.setItem('user', JSON.stringify(user));
       }
 
+      // Refresh auth context to update state
+      await refreshSession();
       navigate('/main-menu');
     } catch (error) {
       setErrors({

@@ -10,9 +10,11 @@ import {
 } from '../components';
 import { ASSETS } from '../assetPaths';
 import { AuthAdapter } from '../adapters/authAdapter';
+import { useAuth } from '../contexts/AuthContext';
 
 export const RegistrationProfileEditScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { refreshSession } = useAuth();
   const [displayName, setDisplayName] = useState('');
   const [gender, setGender] = useState<'male' | 'female'>('male');
   const [selectedAvatar, setSelectedAvatar] = useState<string>(
@@ -67,6 +69,8 @@ export const RegistrationProfileEditScreen: React.FC = () => {
       }
 
       sessionStorage.removeItem('temp_user');
+      // Refresh auth context to update state
+      await refreshSession();
       navigate('/main-menu');
     } catch (error) {
       setErrors({
