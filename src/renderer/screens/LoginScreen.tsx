@@ -48,7 +48,12 @@ export const LoginScreen: React.FC = () => {
       }
 
       // Refresh auth context to update state
+      // Use a small delay to ensure state updates before navigation
       await refreshSession();
+      
+      // Wait a bit for the auth context to update
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      
       navigate('/main-menu');
     } catch (error) {
       setErrors({

@@ -41,8 +41,13 @@ async function getSupabaseClientWithSession(
 }
 
 export class AuthService {
+  private supabaseClient: SupabaseClient | null = null;
+
   private get supabase() {
-    return getSupabaseClient();
+    if (!this.supabaseClient) {
+      this.supabaseClient = getSupabaseClient();
+    }
+    return this.supabaseClient;
   }
 
   async signUp(email: string, password: string) {
@@ -62,6 +67,9 @@ export class AuthService {
     });
 
     if (error) throw error;
+    
+    // The session is automatically set on the client after signIn
+    // This ensures getSession() will work correctly
     return data;
   }
 

@@ -25,24 +25,74 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshSession = useCallback(async () => {
     try {
-      const currentSession = await AuthAdapter.getSession();
-      setSession(currentSession);
+      // First, try to get session from localStorage (faster, and works immediately after login)
+      const storedSession = localStorage.getItem('session');
+      const storedUser = localStorage.getItem('user');
 
-      if (currentSession?.user) {
-        setUser(currentSession.user);
-        localStorage.setItem('session', JSON.stringify(currentSession));
-        localStorage.setItem('user', JSON.stringify(currentSession.user));
+      if (storedSession && storedUser) {
+        try {
+          const parsedSession = JSON.parse(storedSession);
+          const parsedUser = JSON.parse(storedUser);
+          
+          // Set the session immediately from localStorage
+          setSession(parsedSession);
+          setUser(parsedUser);
+          
+          // Then verify with the server (but don't wait for it to update state)
+          try {
+            const serverSession = await AuthAdapter.getSession();
+            if (serverSession) {
+              // Update with server session if available
+              setSession(serverSession);
+              if (serverSession.user) {
+                setUser(serverSession.user);
+                localStorage.setItem('session', JSON.stringify(serverSession));
+                localStorage.setItem('user', JSON.stringify(serverSession.user));
+              }
+            }
+          } catch (serverError) {
+            // If server session fails, keep using localStorage session
+            console.warn('Failed to verify session with server, using cached session:', serverError);
+          }
+        } catch (parseError) {
+          console.error('Failed to parse stored session:', parseError);
+          localStorage.removeItem('session');
+          localStorage.removeItem('user');
+          setSession(null);
+          setUser(null);
+        }
       } else {
-        setUser(null);
-        localStorage.removeItem('session');
-        localStorage.removeItem('user');
+        // No stored session, try to get from server
+        const currentSession = await AuthAdapter.getSession();
+        setSession(currentSession);
+
+        if (currentSession?.user) {
+          setUser(currentSession.user);
+          localStorage.setItem('session', JSON.stringify(currentSession));
+          localStorage.setItem('user', JSON.stringify(currentSession.user));
+        } else {
+          setUser(null);
+          localStorage.removeItem('session');
+          localStorage.removeItem('user');
+        }
       }
     } catch (error) {
       console.error('Failed to refresh session:', error);
-      setSession(null);
-      setUser(null);
-      localStorage.removeItem('session');
-      localStorage.removeItem('user');
+      // Don't clear localStorage on error - keep the session if it exists
+      const storedSession = localStorage.getItem('session');
+      const storedUser = localStorage.getItem('user');
+      if (storedSession && storedUser) {
+        try {
+          setSession(JSON.parse(storedSession));
+          setUser(JSON.parse(storedUser));
+        } catch {
+          setSession(null);
+          setUser(null);
+        }
+      } else {
+        setSession(null);
+        setUser(null);
+      }
     } finally {
       setIsLoading(false);
     }
