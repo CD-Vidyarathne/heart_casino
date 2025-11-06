@@ -31,6 +31,7 @@
     "lint:fix": "biome check --write --no-errors-on-unmatched --assist-enabled=true"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.80.0",
     "clsx": "^2.1.1",
     "electron-router-dom": "^2.1.0",
     "react": "^19.1.1",

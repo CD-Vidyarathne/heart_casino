@@ -3,6 +3,13 @@ export const IPC_CHANNELS = {
     FETCH_PUZZLE: 'heart:fetch-puzzle',
     VALIDATE_SOLUTION: 'heart:validate-solution',
   },
+  AUTH: {
+    SIGN_UP: 'auth:sign-up',
+    SIGN_IN: 'auth:sign-in',
+    SIGN_OUT: 'auth:sign-out',
+    GET_SESSION: 'auth:get-session',
+    UPDATE_PROFILE: 'auth:update-profile',
+  },
 } as const;
 
 type ChannelValues<T> = T extends object

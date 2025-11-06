@@ -9,6 +9,7 @@ import {
   AvatarSelector,
 } from '../components';
 import { ASSETS } from '../assetPaths';
+import { AuthAdapter } from '../adapters/authAdapter';
 
 export const RegistrationProfileEditScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -45,12 +46,36 @@ export const RegistrationProfileEditScreen: React.FC = () => {
     if (!validateForm()) return;
 
     setIsLoading(true);
+    try {
+      const tempUserStr = sessionStorage.getItem('temp_user');
+      if (!tempUserStr) {
+        throw new Error('User session not found. Please register again.');
+      }
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+      const tempUser = JSON.parse(tempUserStr);
+
+      await AuthAdapter.updateProfile(tempUser.id, {
+        display_name: displayName,
+        gender: gender,
+        avatar: selectedAvatar,
+      });
+
+      const session = await AuthAdapter.getSession();
+      if (session) {
+        localStorage.setItem('session', JSON.stringify(session));
+        localStorage.setItem('user', JSON.stringify(tempUser));
+      }
+
+      sessionStorage.removeItem('temp_user');
       navigate('/main-menu');
-    }, 1000);
+    } catch (error) {
+      setErrors({
+        displayName:
+          error instanceof Error ? error.message : 'Profile creation failed',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

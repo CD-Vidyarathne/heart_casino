@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, Card, TitleBar } from '../components';
+import { AuthAdapter } from '../adapters/authAdapter';
 
 export const RegistrationScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -47,12 +48,21 @@ export const RegistrationScreen: React.FC = () => {
     if (!validateForm()) return;
 
     setIsLoading(true);
+    try {
+      const { user } = await AuthAdapter.signUp(email, password);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+      if (user) {
+        sessionStorage.setItem('temp_user', JSON.stringify(user));
+      }
+
       navigate('/register-profile');
-    }, 1000);
+    } catch (error) {
+      setErrors({
+        email: error instanceof Error ? error.message : 'Registration failed',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleLogin = () => {
