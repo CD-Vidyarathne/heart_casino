@@ -13,6 +13,8 @@ import { ASSETS } from '../assetPaths';
 import { useAuth } from '../contexts/UserContext';
 import { AuthAdapter } from '../adapters/userAdapter';
 
+type AlertType = 'success' | 'error' | 'warning' | 'confirm';
+
 export const ProfileEditScreen: React.FC = () => {
   const navigate = useNavigate();
   const { user, profile, session, refreshProfile, signOut } = useAuth();
@@ -49,12 +51,18 @@ export const ProfileEditScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
+  const [alertModal, setAlertModal] = useState({
+    isOpen: false,
+    type: 'success' as AlertType,
+    title: '',
+    message: '',
+    onConfirm: () => { },
+    showCancel: false,
+  });
+
   const validateForm = () => {
     const newErrors: {
       displayName?: string;
-      currentPassword?: string;
-      newPassword?: string;
-      confirmPassword?: string;
     } = {};
 
     if (!formData.displayName.trim()) {
@@ -94,10 +102,50 @@ export const ProfileEditScreen: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const showAlert = (
+    type: AlertType,
+    title: string,
+    message: string,
+    onConfirm?: () => void,
+    showCancel = false
+  ) => {
+    setAlertModal({
+      isOpen: true,
+      type,
+      title,
+      message,
+      onConfirm: onConfirm || (() => { }),
+      showCancel,
+    });
+  };
+
+  const closeAlert = () => {
+    setAlertModal((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  const getAlertColor = () => {
+    switch (alertModal.type) {
+      case 'success':
+        return 'border-green-500/50 text-green-400';
+      case 'error':
+        return 'border-red-500/50 text-red-400';
+      case 'warning':
+        return 'border-yellow-500/50 text-yellow-400';
+      case 'confirm':
+        return 'border-blue-500/50 text-blue-400';
+      default:
+        return 'border-purple-500/50 text-purple-400';
+    }
+  };
+
   const handleSaveProfile = async () => {
     if (!validateForm()) return;
     if (!user?.id || !session) {
-      alert('You must be logged in to update your profile');
+      showAlert(
+        'error',
+        'Authentication Error',
+        'You must be logged in to update your profile'
+      );
       return;
     }
 
@@ -114,9 +162,15 @@ export const ProfileEditScreen: React.FC = () => {
         session
       );
       await refreshProfile();
-      alert('Profile updated successfully!');
+      showAlert(
+        'success',
+        'Success!',
+        'Your profile has been updated successfully'
+      );
     } catch (error) {
-      alert(
+      showAlert(
+        'error',
+        'Update Failed',
         error instanceof Error ? error.message : 'Failed to update profile'
       );
     } finally {
@@ -138,12 +192,28 @@ export const ProfileEditScreen: React.FC = () => {
         newPassword: '',
         confirmPassword: '',
       });
-      alert('Password changed successfully!');
+      showAlert(
+        'success',
+        'Password Changed',
+        'Your password has been changed successfully'
+      );
     }, 1000);
   };
 
+  const handleLogout = () => {
+    showAlert(
+      'confirm',
+      'Confirm Logout',
+      'Are you sure you want to log out of your account?',
+      async () => {
+        await signOut();
+        navigate('/login');
+      },
+      true
+    );
+  };
+
   const handleGenderChange = (newGender: 'male' | 'female') => {
-    setFormData({ ...formData, gender: newGender });
     const avatars =
       newGender === 'male' ? ASSETS.AVATARS.MALE : ASSETS.AVATARS.FEMALE;
     setFormData({ ...formData, gender: newGender, avatar: avatars[0] });
@@ -159,7 +229,6 @@ export const ProfileEditScreen: React.FC = () => {
         />
 
         <div className="space-y-6">
-          {/* Profile Information */}
           <Card className="p-4">
             <h3 className="text-lg font-bold text-white mb-4 luckiest-guy">
               Profile Information
@@ -247,12 +316,7 @@ export const ProfileEditScreen: React.FC = () => {
                 </Button>
                 <Button
                   variant="danger"
-                  onClick={async () => {
-                    if (window.confirm('Are you sure you want to log out?')) {
-                      await signOut();
-                      navigate('/login');
-                    }
-                  }}
+                  onClick={handleLogout}
                   className="w-full"
                 >
                   Log Out
@@ -308,6 +372,39 @@ export const ProfileEditScreen: React.FC = () => {
             error={errors.confirmPassword}
             required
           />
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={alertModal.isOpen}
+        onClose={closeAlert}
+        title={alertModal.title}
+        showActions={false}
+      >
+        <div className={`border-4 ${getAlertColor()} rounded-lg p-6 mb-6`}>
+          <div className="flex flex-col items-center text-center space-y-4">
+            <p className="text-gray-200 poppins text-base leading-relaxed">
+              {alertModal.message}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex gap-3">
+          {alertModal.showCancel && (
+            <Button variant="secondary" onClick={closeAlert} className="flex-1">
+              Cancel
+            </Button>
+          )}
+          <Button
+            variant="primary"
+            onClick={() => {
+              alertModal.onConfirm();
+              closeAlert();
+            }}
+            className={alertModal.showCancel ? 'flex-1' : 'w-full'}
+          >
+            {alertModal.showCancel ? 'Confirm' : 'OK'}
+          </Button>
         </div>
       </Modal>
     </div>
