@@ -4,7 +4,7 @@ import { Navigation } from './components';
 export function AppLayout() {
   return (
     <div className="background overflow-hidden">
-      <Navigation />
+      {/* <Navigation /> */}
       <Outlet />
     </div>
   );
