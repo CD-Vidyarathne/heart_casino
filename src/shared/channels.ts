@@ -3,13 +3,13 @@ export const IPC_CHANNELS = {
     FETCH_PUZZLE: 'heart:fetch-puzzle',
     VALIDATE_SOLUTION: 'heart:validate-solution',
   },
-  AUTH: {
-    SIGN_UP: 'auth:sign-up',
-    SIGN_IN: 'auth:sign-in',
-    SIGN_OUT: 'auth:sign-out',
-    GET_SESSION: 'auth:get-session',
-    GET_USER_PROFILE: 'auth:get-user-profile',
-    UPDATE_PROFILE: 'auth:update-profile',
+  USER: {
+    SIGN_UP: 'user:sign-up',
+    SIGN_IN: 'user:sign-in',
+    SIGN_OUT: 'user:sign-out',
+    GET_SESSION: 'user:get-session',
+    GET_USER_PROFILE: 'user:get-user-profile',
+    UPDATE_PROFILE: 'user:update-profile',
   },
 } as const;
 

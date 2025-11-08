@@ -5,7 +5,7 @@ import React, {
   useState,
   useCallback,
 } from 'react';
-import { AuthAdapter } from '../adapters/authAdapter';
+import { AuthAdapter } from '../adapters/userAdapter';
 
 interface UserProfile {
   id: string;
@@ -18,7 +18,7 @@ interface UserProfile {
   updated_at?: string;
 }
 
-interface AuthContextType {
+interface UserContextType {
   session: any | null;
   user: any | null;
   profile: UserProfile | null;
@@ -29,9 +29,9 @@ interface AuthContextType {
   refreshProfile: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function UserProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<any | null>(null);
   const [user, setUser] = useState<any | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -245,7 +245,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [refreshSession]);
 
-  const value: AuthContextType = {
+  const value: UserContextType = {
     session,
     user,
     profile,
@@ -256,11 +256,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refreshProfile,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
+  const context = useContext(UserContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }

@@ -9,8 +9,8 @@ import {
   AvatarSelector,
 } from '../components';
 import { ASSETS } from '../assetPaths';
-import { AuthAdapter } from '../adapters/authAdapter';
-import { useAuth } from '../contexts/AuthContext';
+import { AuthAdapter } from '../adapters/userAdapter';
+import { useAuth } from '../contexts/UserContext';
 
 export const RegistrationProfileEditScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -75,9 +75,9 @@ export const RegistrationProfileEditScreen: React.FC = () => {
       // Prepare session object for profile update
       const sessionForUpdate = session
         ? {
-            access_token: session.access_token,
-            refresh_token: session.refresh_token,
-          }
+          access_token: session.access_token,
+          refresh_token: session.refresh_token,
+        }
         : undefined;
 
       console.log(

@@ -2,14 +2,14 @@ import ReactDom from 'react-dom/client';
 import React from 'react';
 
 import { AppRoutes } from './routes';
-import { AuthProvider } from './contexts/AuthContext';
+import { UserProvider } from './contexts/UserContext';
 
 import './globals.css';
 
 ReactDom.createRoot(document.querySelector('app') as HTMLElement).render(
   <React.StrictMode>
-    <AuthProvider>
+    <UserProvider>
       <AppRoutes />
-    </AuthProvider>
+    </UserProvider>
   </React.StrictMode>
 );

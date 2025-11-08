@@ -12,7 +12,7 @@ import { ProfileEditScreen } from './screens/ProfileEditScreen';
 import { Navigation, ProtectedRoute, PublicRoute } from './components';
 import { AppLayout } from './layout';
 import { HeartGameScreen } from './screens/HeartGameScreen';
-import { useAuth } from './contexts/AuthContext';
+import { useAuth } from './contexts/UserContext';
 
 function RootRedirect() {
   const { isAuthenticated, isLoading } = useAuth();

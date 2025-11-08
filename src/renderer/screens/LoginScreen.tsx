@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, Card, TitleBar } from '../components';
-import { AuthAdapter } from '../adapters/authAdapter';
-import { useAuth } from '../contexts/AuthContext';
+import { AuthAdapter } from '../adapters/userAdapter';
+import { useAuth } from '../contexts/UserContext';
 
 export const LoginScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -50,10 +50,10 @@ export const LoginScreen: React.FC = () => {
       // Refresh auth context to update state
       // Use a small delay to ensure state updates before navigation
       await refreshSession();
-      
+
       // Wait a bit for the auth context to update
       await new Promise((resolve) => setTimeout(resolve, 100));
-      
+
       navigate('/main-menu');
     } catch (error) {
       setErrors({

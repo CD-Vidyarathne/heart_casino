@@ -1,13 +1,13 @@
 import { ipcMain } from 'electron';
 import { IPC_CHANNELS } from '../../shared/channels';
-import { authService } from '../services/auth/authService';
+import { userService } from '../services/user/userService';
 
-export function registerAuthHandlers() {
+export function registerUserHandlers() {
   ipcMain.handle(
-    IPC_CHANNELS.AUTH.SIGN_UP,
+    IPC_CHANNELS.USER.SIGN_UP,
     async (_event, email: string, password: string) => {
       try {
-        const data = await authService.signUp(email, password);
+        const data = await userService.signUp(email, password);
         return { success: true, data };
       } catch (error) {
         return {
@@ -19,10 +19,10 @@ export function registerAuthHandlers() {
   );
 
   ipcMain.handle(
-    IPC_CHANNELS.AUTH.SIGN_IN,
+    IPC_CHANNELS.USER.SIGN_IN,
     async (_event, email: string, password: string) => {
       try {
-        const data = await authService.signIn(email, password);
+        const data = await userService.signIn(email, password);
         return { success: true, data };
       } catch (error) {
         return {
@@ -33,9 +33,9 @@ export function registerAuthHandlers() {
     }
   );
 
-  ipcMain.handle(IPC_CHANNELS.AUTH.SIGN_OUT, async () => {
+  ipcMain.handle(IPC_CHANNELS.USER.SIGN_OUT, async () => {
     try {
-      await authService.signOut();
+      await userService.signOut();
       return { success: true };
     } catch (error) {
       return {
@@ -45,28 +45,27 @@ export function registerAuthHandlers() {
     }
   });
 
-  ipcMain.handle(IPC_CHANNELS.AUTH.GET_SESSION, async () => {
+  ipcMain.handle(IPC_CHANNELS.USER.GET_SESSION, async () => {
     try {
-      const session = await authService.getSession();
+      const session = await userService.getSession();
       return { success: true, data: session };
     } catch (error) {
       return {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to get session',
+        error: error instanceof Error ? error.message : 'Failed to get session',
       };
     }
   });
 
   ipcMain.handle(
-    IPC_CHANNELS.AUTH.GET_USER_PROFILE,
+    IPC_CHANNELS.USER.GET_USER_PROFILE,
     async (
       _event,
       userId: string,
       session?: { access_token: string; refresh_token?: string }
     ) => {
       try {
-        const data = await authService.getUserProfile(userId, session);
+        const data = await userService.getUserProfile(userId, session);
         return { success: true, data };
       } catch (error) {
         return {
@@ -81,7 +80,7 @@ export function registerAuthHandlers() {
   );
 
   ipcMain.handle(
-    IPC_CHANNELS.AUTH.UPDATE_PROFILE,
+    IPC_CHANNELS.USER.UPDATE_PROFILE,
     async (
       _event,
       userId: string,
@@ -89,8 +88,13 @@ export function registerAuthHandlers() {
       session?: { access_token: string; refresh_token?: string }
     ) => {
       try {
-        console.log('Updating profile for user:', userId, 'with data:', profileData);
-        const data = await authService.updateProfile(
+        console.log(
+          'Updating profile for user:',
+          userId,
+          'with data:',
+          profileData
+        );
+        const data = await userService.updateProfile(
           userId,
           profileData,
           session
@@ -108,4 +112,3 @@ export function registerAuthHandlers() {
     }
   );
 }
-

@@ -10,8 +10,8 @@ import {
   Modal,
 } from '../components';
 import { ASSETS } from '../assetPaths';
-import { useAuth } from '../contexts/AuthContext';
-import { AuthAdapter } from '../adapters/authAdapter';
+import { useAuth } from '../contexts/UserContext';
+import { AuthAdapter } from '../adapters/userAdapter';
 
 export const ProfileEditScreen: React.FC = () => {
   const navigate = useNavigate();

@@ -40,7 +40,7 @@ async function getSupabaseClientWithSession(session: {
   return client;
 }
 
-export class AuthService {
+export class UserService {
   private supabaseClient: SupabaseClient | null = null;
 
   private get supabase() {
@@ -135,4 +135,4 @@ export class AuthService {
   }
 }
 
-export const authService = new AuthService();
+export const userService = new UserService();

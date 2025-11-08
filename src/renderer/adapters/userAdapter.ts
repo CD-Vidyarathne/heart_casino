@@ -8,11 +8,9 @@ interface AuthResponse<T> {
 
 export class AuthAdapter {
   static async signUp(email: string, password: string) {
-    const response = await window.electron.ipcRenderer.invoke<AuthResponse<any>>(
-      IPC_CHANNELS.AUTH.SIGN_UP,
-      email,
-      password
-    );
+    const response = await window.electron.ipcRenderer.invoke<
+      AuthResponse<any>
+    >(IPC_CHANNELS.USER.SIGN_UP, email, password);
 
     if (!response.success) {
       throw new Error(response.error || 'Sign up failed');
@@ -22,11 +20,9 @@ export class AuthAdapter {
   }
 
   static async signIn(email: string, password: string) {
-    const response = await window.electron.ipcRenderer.invoke<AuthResponse<any>>(
-      IPC_CHANNELS.AUTH.SIGN_IN,
-      email,
-      password
-    );
+    const response = await window.electron.ipcRenderer.invoke<
+      AuthResponse<any>
+    >(IPC_CHANNELS.USER.SIGN_IN, email, password);
 
     if (!response.success) {
       throw new Error(response.error || 'Sign in failed');
@@ -36,9 +32,9 @@ export class AuthAdapter {
   }
 
   static async signOut() {
-    const response = await window.electron.ipcRenderer.invoke<AuthResponse<void>>(
-      IPC_CHANNELS.AUTH.SIGN_OUT
-    );
+    const response = await window.electron.ipcRenderer.invoke<
+      AuthResponse<void>
+    >(IPC_CHANNELS.USER.SIGN_OUT);
 
     if (!response.success) {
       throw new Error(response.error || 'Sign out failed');
@@ -46,9 +42,9 @@ export class AuthAdapter {
   }
 
   static async getSession() {
-    const response = await window.electron.ipcRenderer.invoke<AuthResponse<any>>(
-      IPC_CHANNELS.AUTH.GET_SESSION
-    );
+    const response = await window.electron.ipcRenderer.invoke<
+      AuthResponse<any>
+    >(IPC_CHANNELS.USER.GET_SESSION);
 
     if (!response.success) {
       throw new Error(response.error || 'Failed to get session');
@@ -61,11 +57,9 @@ export class AuthAdapter {
     userId: string,
     session?: { access_token: string; refresh_token?: string }
   ) {
-    const response = await window.electron.ipcRenderer.invoke<AuthResponse<any>>(
-      IPC_CHANNELS.AUTH.GET_USER_PROFILE,
-      userId,
-      session
-    );
+    const response = await window.electron.ipcRenderer.invoke<
+      AuthResponse<any>
+    >(IPC_CHANNELS.USER.GET_USER_PROFILE, userId, session);
 
     if (!response.success) {
       throw new Error(response.error || 'Failed to get user profile');
@@ -83,12 +77,9 @@ export class AuthAdapter {
     },
     session?: { access_token: string; refresh_token?: string }
   ) {
-    const response = await window.electron.ipcRenderer.invoke<AuthResponse<any>>(
-      IPC_CHANNELS.AUTH.UPDATE_PROFILE,
-      userId,
-      profileData,
-      session
-    );
+    const response = await window.electron.ipcRenderer.invoke<
+      AuthResponse<any>
+    >(IPC_CHANNELS.USER.UPDATE_PROFILE, userId, profileData, session);
 
     if (!response.success) {
       throw new Error(response.error || 'Profile update failed');
@@ -97,4 +88,3 @@ export class AuthAdapter {
     return response.data;
   }
 }
-

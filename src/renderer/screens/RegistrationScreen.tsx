@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, Card, TitleBar } from '../components';
-import { AuthAdapter } from '../adapters/authAdapter';
+import { AuthAdapter } from '../adapters/userAdapter';
 
 export const RegistrationScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -53,12 +53,18 @@ export const RegistrationScreen: React.FC = () => {
 
       // Store both user and session if available
       if (signUpResponse?.user) {
-        sessionStorage.setItem('temp_user', JSON.stringify(signUpResponse.user));
+        sessionStorage.setItem(
+          'temp_user',
+          JSON.stringify(signUpResponse.user)
+        );
       }
-      
+
       // Store session if available (Supabase might auto-sign in after signup)
       if (signUpResponse?.session) {
-        sessionStorage.setItem('temp_session', JSON.stringify(signUpResponse.session));
+        sessionStorage.setItem(
+          'temp_session',
+          JSON.stringify(signUpResponse.session)
+        );
         localStorage.setItem('session', JSON.stringify(signUpResponse.session));
         localStorage.setItem('user', JSON.stringify(signUpResponse.user));
       }

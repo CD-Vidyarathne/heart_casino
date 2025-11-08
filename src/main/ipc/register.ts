@@ -1,7 +1,7 @@
 import { registerHeartHandlers } from './heartRegisters';
-import { registerAuthHandlers } from './authHandlers';
+import { registerUserHandlers } from './userHandlers';
 
 export function registerAllIPCHandlers() {
   registerHeartHandlers();
-  registerAuthHandlers();
+  registerUserHandlers();
 }
