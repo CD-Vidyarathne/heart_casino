@@ -57,6 +57,23 @@ export class AuthAdapter {
     return response.data;
   }
 
+  static async getUserProfile(
+    userId: string,
+    session?: { access_token: string; refresh_token?: string }
+  ) {
+    const response = await window.electron.ipcRenderer.invoke<AuthResponse<any>>(
+      IPC_CHANNELS.AUTH.GET_USER_PROFILE,
+      userId,
+      session
+    );
+
+    if (!response.success) {
+      throw new Error(response.error || 'Failed to get user profile');
+    }
+
+    return response.data;
+  }
+
   static async updateProfile(
     userId: string,
     profileData: {

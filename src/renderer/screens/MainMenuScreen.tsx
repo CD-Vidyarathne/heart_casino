@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Card, TitleBar } from '../components';
+import { Button, Card, TitleBar, ProfileHeader } from '../components';
 import { ASSETS } from '../assetPaths';
 
 export const MainMenuScreen: React.FC = () => {
@@ -43,6 +43,7 @@ export const MainMenuScreen: React.FC = () => {
 
   return (
     <div className="screen-container">
+      <ProfileHeader />
       <div className="screen-content">
         <div className="text-center mb-12">
           <img

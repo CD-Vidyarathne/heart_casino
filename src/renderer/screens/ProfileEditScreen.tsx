@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -10,26 +10,34 @@ import {
   Modal,
 } from '../components';
 import { ASSETS } from '../assetPaths';
+import { useAuth } from '../contexts/AuthContext';
+import { AuthAdapter } from '../adapters/authAdapter';
 
 export const ProfileEditScreen: React.FC = () => {
   const navigate = useNavigate();
-
-  // Mock user data - in a real app, this would come from context/API
-  const [userData, setUserData] = useState({
-    displayName: 'Player One',
-    email: 'player@example.com',
-    gender: 'male' as 'male' | 'female',
-    avatar: ASSETS.AVATARS.MALE[0],
-  });
+  const { user, profile, session, refreshProfile, signOut } = useAuth();
 
   const [formData, setFormData] = useState({
-    displayName: userData.displayName,
+    displayName: profile?.display_name || user?.email?.split('@')[0] || '',
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
-    gender: userData.gender,
-    avatar: userData.avatar,
+    gender: (profile?.gender || 'male') as 'male' | 'female',
+    avatar: profile?.avatar || ASSETS.AVATARS.MALE[0],
   });
+
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        displayName: profile.display_name || user?.email?.split('@')[0] || '',
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+        gender: (profile.gender || 'male') as 'male' | 'female',
+        avatar: profile.avatar || ASSETS.AVATARS.MALE[0],
+      });
+    }
+  }, [profile, user]);
 
   const [errors, setErrors] = useState<{
     displayName?: string;
@@ -88,20 +96,32 @@ export const ProfileEditScreen: React.FC = () => {
 
   const handleSaveProfile = async () => {
     if (!validateForm()) return;
+    if (!user?.id || !session) {
+      alert('You must be logged in to update your profile');
+      return;
+    }
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      setUserData({
-        ...userData,
-        displayName: formData.displayName,
-        gender: formData.gender,
-        avatar: formData.avatar,
-      });
+    try {
+      await AuthAdapter.updateProfile(
+        user.id,
+        {
+          display_name: formData.displayName.trim(),
+          gender: formData.gender,
+          avatar: formData.avatar,
+        },
+        session
+      );
+      await refreshProfile();
       alert('Profile updated successfully!');
-    }, 1000);
+    } catch (error) {
+      alert(
+        error instanceof Error ? error.message : 'Failed to update profile'
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChangePassword = async () => {
@@ -109,7 +129,6 @@ export const ProfileEditScreen: React.FC = () => {
 
     setIsLoading(true);
 
-    // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
       setShowPasswordModal(false);
@@ -125,7 +144,6 @@ export const ProfileEditScreen: React.FC = () => {
 
   const handleGenderChange = (newGender: 'male' | 'female') => {
     setFormData({ ...formData, gender: newGender });
-    // Auto-select first avatar of the new gender
     const avatars =
       newGender === 'male' ? ASSETS.AVATARS.MALE : ASSETS.AVATARS.FEMALE;
     setFormData({ ...formData, gender: newGender, avatar: avatars[0] });
@@ -170,8 +188,8 @@ export const ProfileEditScreen: React.FC = () => {
                 type="email"
                 label="Email"
                 placeholder="Enter your email"
-                value={userData.email}
-                onChange={() => { }} // Email is read-only in this demo
+                value={user?.email || ''}
+                onChange={() => { }}
                 disabled
                 className="opacity-50"
               />
@@ -200,7 +218,6 @@ export const ProfileEditScreen: React.FC = () => {
             </form>
           </Card>
 
-          {/* Security Settings */}
           <Card className="p-4">
             <h3 className="text-lg font-bold text-white mb-4 luckiest-guy">
               Security Settings
@@ -220,7 +237,7 @@ export const ProfileEditScreen: React.FC = () => {
                 </Button>
               </div>
 
-              <div className="pt-4">
+              <div className="pt-4 space-y-3">
                 <Button
                   variant="secondary"
                   onClick={() => navigate('/main-menu')}
@@ -228,13 +245,24 @@ export const ProfileEditScreen: React.FC = () => {
                 >
                   ← Back to Main Menu
                 </Button>
+                <Button
+                  variant="danger"
+                  onClick={async () => {
+                    if (window.confirm('Are you sure you want to log out?')) {
+                      await signOut();
+                      navigate('/login');
+                    }
+                  }}
+                  className="w-full"
+                >
+                  Log Out
+                </Button>
               </div>
             </div>
           </Card>
         </div>
       </div>
 
-      {/* Password Change Modal */}
       <Modal
         isOpen={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}

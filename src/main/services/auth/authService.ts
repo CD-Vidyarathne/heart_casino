@@ -13,9 +13,10 @@ function getSupabaseClient(): SupabaseClient {
   return createClient(supabaseUrl, supabaseKey);
 }
 
-async function getSupabaseClientWithSession(
-  session: { access_token: string; refresh_token?: string }
-): Promise<SupabaseClient> {
+async function getSupabaseClientWithSession(session: {
+  access_token: string;
+  refresh_token?: string;
+}): Promise<SupabaseClient> {
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
@@ -26,7 +27,6 @@ async function getSupabaseClientWithSession(
   }
 
   const client = createClient(supabaseUrl, supabaseKey);
-  // Set the session for this client - setSession is async
   try {
     await client.auth.setSession({
       access_token: session.access_token,
@@ -67,9 +67,7 @@ export class AuthService {
     });
 
     if (error) throw error;
-    
-    // The session is automatically set on the client after signIn
-    // This ensures getSession() will work correctly
+
     return data;
   }
 
@@ -84,6 +82,27 @@ export class AuthService {
     return data.session;
   }
 
+  async getUserProfile(
+    userId: string,
+    session?: { access_token: string; refresh_token?: string }
+  ) {
+    const client = session
+      ? await getSupabaseClientWithSession(session)
+      : this.supabase;
+
+    const { data, error } = await client
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (error) {
+      console.error('Supabase profile fetch error:', error);
+      throw error;
+    }
+    return data;
+  }
+
   async updateProfile(
     userId: string,
     profileData: {
@@ -93,7 +112,6 @@ export class AuthService {
     },
     session?: { access_token: string; refresh_token?: string }
   ) {
-    // If session is provided, set it on the client for this request
     const client = session
       ? await getSupabaseClientWithSession(session)
       : this.supabase;

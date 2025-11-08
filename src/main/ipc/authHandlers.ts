@@ -59,6 +59,28 @@ export function registerAuthHandlers() {
   });
 
   ipcMain.handle(
+    IPC_CHANNELS.AUTH.GET_USER_PROFILE,
+    async (
+      _event,
+      userId: string,
+      session?: { access_token: string; refresh_token?: string }
+    ) => {
+      try {
+        const data = await authService.getUserProfile(userId, session);
+        return { success: true, data };
+      } catch (error) {
+        return {
+          success: false,
+          error:
+            error instanceof Error
+              ? error.message
+              : 'Failed to get user profile',
+        };
+      }
+    }
+  );
+
+  ipcMain.handle(
     IPC_CHANNELS.AUTH.UPDATE_PROFILE,
     async (
       _event,

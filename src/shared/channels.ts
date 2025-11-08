@@ -8,6 +8,7 @@ export const IPC_CHANNELS = {
     SIGN_IN: 'auth:sign-in',
     SIGN_OUT: 'auth:sign-out',
     GET_SESSION: 'auth:get-session',
+    GET_USER_PROFILE: 'auth:get-user-profile',
     UPDATE_PROFILE: 'auth:update-profile',
   },
 } as const;
