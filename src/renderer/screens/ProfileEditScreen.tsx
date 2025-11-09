@@ -11,7 +11,7 @@ import {
 } from '../components';
 import { ASSETS } from '../assetPaths';
 import { useAuth } from '../contexts/UserContext';
-import { AuthAdapter } from '../adapters/userAdapter';
+import { UserAdapter } from '../adapters/userAdapter';
 
 type AlertType = 'success' | 'error' | 'warning' | 'confirm';
 
@@ -152,7 +152,7 @@ export const ProfileEditScreen: React.FC = () => {
     setIsLoading(true);
 
     try {
-      await AuthAdapter.updateProfile(
+      await UserAdapter.updateProfile(
         user.id,
         {
           display_name: formData.displayName.trim(),

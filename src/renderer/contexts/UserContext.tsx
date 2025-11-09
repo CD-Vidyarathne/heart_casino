@@ -5,7 +5,7 @@ import React, {
   useState,
   useCallback,
 } from 'react';
-import { AuthAdapter } from '../adapters/userAdapter';
+import { UserAdapter } from '../adapters/userAdapter';
 
 interface UserProfile {
   id: string;
@@ -44,7 +44,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const userProfile = await AuthAdapter.getUserProfile(user.id, session);
+      const userProfile = await UserAdapter.getUserProfile(user.id, session);
       setProfile(userProfile || null);
       if (userProfile) {
         localStorage.setItem('profile', JSON.stringify(userProfile));
@@ -87,7 +87,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           }
 
           try {
-            const serverSession = await AuthAdapter.getSession();
+            const serverSession = await UserAdapter.getSession();
             if (serverSession) {
               setSession(serverSession);
               if (serverSession.user) {
@@ -99,7 +99,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
                 );
 
                 try {
-                  const userProfile = await AuthAdapter.getUserProfile(
+                  const userProfile = await UserAdapter.getUserProfile(
                     serverSession.user.id,
                     serverSession
                   );
@@ -122,7 +122,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
             );
             if (parsedUser?.id && parsedSession) {
               try {
-                const userProfile = await AuthAdapter.getUserProfile(
+                const userProfile = await UserAdapter.getUserProfile(
                   parsedUser.id,
                   parsedSession
                 );
@@ -145,7 +145,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           setProfile(null);
         }
       } else {
-        const currentSession = await AuthAdapter.getSession();
+        const currentSession = await UserAdapter.getSession();
         setSession(currentSession);
 
         if (currentSession?.user) {
@@ -154,7 +154,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           localStorage.setItem('user', JSON.stringify(currentSession.user));
 
           try {
-            const userProfile = await AuthAdapter.getUserProfile(
+            const userProfile = await UserAdapter.getUserProfile(
               currentSession.user.id,
               currentSession
             );
@@ -202,7 +202,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      await AuthAdapter.signOut();
+      await UserAdapter.signOut();
       setSession(null);
       setUser(null);
       setProfile(null);

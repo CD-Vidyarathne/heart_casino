@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, Card, TitleBar } from '../components';
-import { AuthAdapter } from '../adapters/userAdapter';
+import { UserAdapter } from '../adapters/userAdapter';
 import { useAuth } from '../contexts/UserContext';
 
 export const LoginScreen: React.FC = () => {
@@ -38,7 +38,7 @@ export const LoginScreen: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const { session, user } = await AuthAdapter.signIn(email, password);
+      const { session, user } = await UserAdapter.signIn(email, password);
 
       if (session) {
         localStorage.setItem('session', JSON.stringify(session));

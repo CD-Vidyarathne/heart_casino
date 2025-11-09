@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, Card, TitleBar } from '../components';
-import { AuthAdapter } from '../adapters/userAdapter';
+import { UserAdapter } from '../adapters/userAdapter';
 
 export const RegistrationScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export const RegistrationScreen: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const signUpResponse = await AuthAdapter.signUp(email, password);
+      const signUpResponse = await UserAdapter.signUp(email, password);
 
       // Store both user and session if available
       if (signUpResponse?.user) {

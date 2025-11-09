@@ -9,7 +9,7 @@ import {
   AvatarSelector,
 } from '../components';
 import { ASSETS } from '../assetPaths';
-import { AuthAdapter } from '../adapters/userAdapter';
+import { UserAdapter } from '../adapters/userAdapter';
 import { useAuth } from '../contexts/UserContext';
 
 export const RegistrationProfileEditScreen: React.FC = () => {
@@ -38,7 +38,6 @@ export const RegistrationProfileEditScreen: React.FC = () => {
 
   const handleGenderChange = (newGender: 'male' | 'female') => {
     setGender(newGender);
-    // Auto-select first avatar of the new gender
     const avatars =
       newGender === 'male' ? ASSETS.AVATARS.MALE : ASSETS.AVATARS.FEMALE;
     setSelectedAvatar(avatars[0]);
@@ -56,7 +55,6 @@ export const RegistrationProfileEditScreen: React.FC = () => {
 
       const tempUser = JSON.parse(tempUserStr);
 
-      // Try to get session from sessionStorage first (stored during signup)
       let session: any = null;
       const tempSessionStr = sessionStorage.getItem('temp_session');
       if (tempSessionStr) {
@@ -67,12 +65,10 @@ export const RegistrationProfileEditScreen: React.FC = () => {
         }
       }
 
-      // If no temp session, try to get current session
       if (!session) {
-        session = await AuthAdapter.getSession();
+        session = await UserAdapter.getSession();
       }
 
-      // Prepare session object for profile update
       const sessionForUpdate = session
         ? {
           access_token: session.access_token,
@@ -87,7 +83,7 @@ export const RegistrationProfileEditScreen: React.FC = () => {
         sessionForUpdate ? 'present' : 'missing'
       );
 
-      await AuthAdapter.updateProfile(
+      await UserAdapter.updateProfile(
         tempUser.id,
         {
           display_name: displayName,
@@ -97,8 +93,7 @@ export const RegistrationProfileEditScreen: React.FC = () => {
         sessionForUpdate
       );
 
-      // Refresh session after profile update
-      session = await AuthAdapter.getSession();
+      session = await UserAdapter.getSession();
       if (session) {
         localStorage.setItem('session', JSON.stringify(session));
         localStorage.setItem('user', JSON.stringify(tempUser));
@@ -106,7 +101,7 @@ export const RegistrationProfileEditScreen: React.FC = () => {
 
       sessionStorage.removeItem('temp_user');
       sessionStorage.removeItem('temp_session');
-      // Refresh auth context to update state
+
       await refreshSession();
       navigate('/main-menu');
     } catch (error) {

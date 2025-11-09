@@ -1,15 +1,15 @@
 import { IPC_CHANNELS } from '../../shared/channels';
 
-interface AuthResponse<T> {
+interface UserResponse<T> {
   success: boolean;
   data?: T;
   error?: string;
 }
 
-export class AuthAdapter {
+export class UserAdapter {
   static async signUp(email: string, password: string) {
     const response = await window.electron.ipcRenderer.invoke<
-      AuthResponse<any>
+      UserResponse<any>
     >(IPC_CHANNELS.USER.SIGN_UP, email, password);
 
     if (!response.success) {
@@ -21,7 +21,7 @@ export class AuthAdapter {
 
   static async signIn(email: string, password: string) {
     const response = await window.electron.ipcRenderer.invoke<
-      AuthResponse<any>
+      UserResponse<any>
     >(IPC_CHANNELS.USER.SIGN_IN, email, password);
 
     if (!response.success) {
@@ -33,7 +33,7 @@ export class AuthAdapter {
 
   static async signOut() {
     const response = await window.electron.ipcRenderer.invoke<
-      AuthResponse<void>
+      UserResponse<void>
     >(IPC_CHANNELS.USER.SIGN_OUT);
 
     if (!response.success) {
@@ -43,7 +43,7 @@ export class AuthAdapter {
 
   static async getSession() {
     const response = await window.electron.ipcRenderer.invoke<
-      AuthResponse<any>
+      UserResponse<any>
     >(IPC_CHANNELS.USER.GET_SESSION);
 
     if (!response.success) {
@@ -58,7 +58,7 @@ export class AuthAdapter {
     session?: { access_token: string; refresh_token?: string }
   ) {
     const response = await window.electron.ipcRenderer.invoke<
-      AuthResponse<any>
+      UserResponse<any>
     >(IPC_CHANNELS.USER.GET_USER_PROFILE, userId, session);
 
     if (!response.success) {
@@ -78,7 +78,7 @@ export class AuthAdapter {
     session?: { access_token: string; refresh_token?: string }
   ) {
     const response = await window.electron.ipcRenderer.invoke<
-      AuthResponse<any>
+      UserResponse<any>
     >(IPC_CHANNELS.USER.UPDATE_PROFILE, userId, profileData, session);
 
     if (!response.success) {
