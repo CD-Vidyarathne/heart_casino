@@ -15,7 +15,7 @@ interface GameInfo {
 const games: GameInfo[] = [
   {
     id: 'blackjack',
-    available: false,
+    available: true,
     name: 'Blackjack',
     description:
       'Beat the dealer by getting as close to 21 as possible without going over.',

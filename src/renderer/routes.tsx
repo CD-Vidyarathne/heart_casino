@@ -13,6 +13,7 @@ import { Navigation, ProtectedRoute, PublicRoute } from './components';
 import { AppLayout } from './layout';
 import { HeartGameScreen } from './screens/HeartGameScreen';
 import { useAuth } from './contexts/UserContext';
+import { BlackjackGameScreen } from './screens/BlackjackGameScreen';
 
 function RootRedirect() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -83,6 +84,14 @@ export function AppRoutes() {
               </ProtectedRoute>
             }
             path="/heart-game"
+          />
+          <Route
+            element={
+              <ProtectedRoute>
+                <BlackjackGameScreen />
+              </ProtectedRoute>
+            }
+            path="/blackjack"
           />
           <Route
             element={

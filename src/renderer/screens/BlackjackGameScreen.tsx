@@ -364,7 +364,7 @@ export const BlackjackGameScreen: React.FC = () => {
               </Button>
               {canDoubleDown && (
                 <Button
-                  variant="warning"
+                  variant="danger"
                   onClick={handleDoubleDown}
                   disabled={isLoading}
                   className="col-span-2"
