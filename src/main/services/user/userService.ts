@@ -121,10 +121,8 @@ export class UserService {
       .eq('id', userId)
       .single();
 
-    console.log('Profile found:', profile);
-
     if (fetchError) {
-      console.error('❌ Failed to fetch current balance:', fetchError);
+      console.error('Failed to fetch current balance:', fetchError);
       throw fetchError;
     }
 
@@ -159,10 +157,6 @@ export class UserService {
       console.error('Failed to update balance:', error);
       throw error;
     }
-
-    console.log(
-      `Balance updated: ${currentBalance} → ${newBalance} (${operation} ${amount})`
-    );
 
     return data;
   }
