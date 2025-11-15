@@ -40,7 +40,7 @@ export const HeartGameScreen: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    if (!puzzle || !userAnswer.trim() || !useFormAction) {
+    if (!puzzle || !userAnswer.trim() || !user) {
       setError('Please enter an answer');
       return;
     }
