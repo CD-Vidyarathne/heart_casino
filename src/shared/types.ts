@@ -16,3 +16,9 @@ export interface WindowCreationByIPC {
   window(): BrowserWindowOrNull;
   callback(window: BrowserWindow, event: IpcMainInvokeEvent): void;
 }
+
+export interface APIResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+}

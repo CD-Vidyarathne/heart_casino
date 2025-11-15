@@ -36,9 +36,3 @@ export interface HeartAPIResponse {
   solution: number;
   carrots: number;
 }
-
-export interface APIResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}

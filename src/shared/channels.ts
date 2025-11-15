@@ -11,6 +11,13 @@ export const IPC_CHANNELS = {
     GET_USER_PROFILE: 'user:get-user-profile',
     UPDATE_PROFILE: 'user:update-profile',
   },
+  BLACKJACK: {
+    START_GAME: 'blackjack:start-game',
+    HIT: 'blackjack:hit',
+    STAND: 'blackjack:stand',
+    DOUBLE_DOWN: 'blackjack:double-down',
+    GET_GAME_STATE: 'blackjack:get-game-state',
+  },
 } as const;
 
 type ChannelValues<T> = T extends object

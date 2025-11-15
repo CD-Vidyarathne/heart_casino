@@ -1,9 +1,6 @@
 import { IPC_CHANNELS } from 'shared/channels';
-import type {
-  HeartPuzzle,
-  HeartGameResult,
-  APIResponse,
-} from '../../shared/heartGameTypes';
+import type { HeartPuzzle, HeartGameResult } from '../../shared/heartGameTypes';
+import type { APIResponse } from 'shared/types';
 
 export class HeartGameAdapter {
   static async fetchPuzzle(): Promise<HeartPuzzle> {
