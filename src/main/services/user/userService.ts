@@ -2,15 +2,25 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import {
   getSupabaseClient,
   getSupabaseClientWithSession,
+  getSupabaseServiceClient,
 } from '../../../lib/dbClient';
+
 export class UserService {
   private supabaseClient: SupabaseClient | null = null;
+  private serviceClient: SupabaseClient | null = null;
 
   private get supabase() {
     if (!this.supabaseClient) {
       this.supabaseClient = getSupabaseClient();
     }
     return this.supabaseClient;
+  }
+
+  private get service() {
+    if (!this.serviceClient) {
+      this.serviceClient = getSupabaseServiceClient();
+    }
+    return this.serviceClient;
   }
 
   async signUp(email: string, password: string) {
@@ -103,9 +113,7 @@ export class UserService {
     operation: 'add' | 'subtract' | 'set',
     session?: { access_token: string; refresh_token?: string }
   ) {
-    const client = session
-      ? await getSupabaseClientWithSession(session)
-      : this.supabase;
+    const client = this.service;
 
     const { data: profile, error: fetchError } = await client
       .from('profiles')
@@ -113,8 +121,10 @@ export class UserService {
       .eq('id', userId)
       .single();
 
+    console.log('Profile found:', profile);
+
     if (fetchError) {
-      console.error('Failed to fetch current balance:', fetchError);
+      console.error('❌ Failed to fetch current balance:', fetchError);
       throw fetchError;
     }
 
@@ -151,7 +161,7 @@ export class UserService {
     }
 
     console.log(
-      `Balance updated for user ${userId}: ${currentBalance} -> ${newBalance} (${operation} ${amount})`
+      `Balance updated: ${currentBalance} → ${newBalance} (${operation} ${amount})`
     );
 
     return data;
