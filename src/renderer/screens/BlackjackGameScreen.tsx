@@ -10,7 +10,7 @@ type AlertType = 'success' | 'error' | 'warning' | 'info';
 
 export const BlackjackGameScreen: React.FC = () => {
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
 
   const [gameState, setGameState] = useState<'betting' | 'playing'>('betting');
   const [game, setGame] = useState<BlackjackGame | null>(null);
@@ -82,6 +82,8 @@ export const BlackjackGameScreen: React.FC = () => {
       setGame(newGame);
       setGameState('playing');
 
+      await refreshProfile();
+
       if (newGame.state === 'game-over') {
         handleGameOver(newGame);
       }
@@ -115,13 +117,13 @@ export const BlackjackGameScreen: React.FC = () => {
   };
 
   const handleStand = async () => {
-    if (!game) return;
+    if (!game || !user) return;
 
     setIsLoading(true);
     try {
-      const updatedGame = await BlackjackAdapter.stand(game.gameId);
+      const updatedGame = await BlackjackAdapter.stand(game.gameId, user.id);
       setGame(updatedGame);
-      handleGameOver(updatedGame);
+      await handleGameOver(updatedGame);
     } catch (err) {
       showAlert(
         'error',
@@ -134,7 +136,7 @@ export const BlackjackGameScreen: React.FC = () => {
   };
 
   const handleDoubleDown = async () => {
-    if (!game) return;
+    if (!game || !user) return;
 
     const balance = profile?.balance || 0;
     if (game.bet > balance) {
@@ -148,9 +150,12 @@ export const BlackjackGameScreen: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const updatedGame = await BlackjackAdapter.doubleDown(game.gameId);
+      const updatedGame = await BlackjackAdapter.doubleDown(
+        game.gameId,
+        user.id
+      );
       setGame(updatedGame);
-      handleGameOver(updatedGame);
+      await handleGameOver(updatedGame);
     } catch (err) {
       showAlert(
         'error',
@@ -162,19 +167,21 @@ export const BlackjackGameScreen: React.FC = () => {
     }
   };
 
-  const handleGameOver = (finishedGame: BlackjackGame) => {
+  const handleGameOver = async (finishedGame: BlackjackGame) => {
     if (!finishedGame.result) return;
+
+    await refreshProfile();
 
     setTimeout(() => {
       const messages = {
         'player-win': {
           type: 'success' as AlertType,
-          title: 'You Win',
-          message: `You won ${finishedGame.payout} coins`,
+          title: 'You Win! 🎉',
+          message: `You won ${finishedGame.payout} coins!`,
         },
         'dealer-win': {
           type: 'error' as AlertType,
-          title: 'Dealer Wins',
+          title: 'Dealer Wins 😔',
           message: `You lost ${finishedGame.bet} coins`,
         },
         push: {
@@ -184,8 +191,8 @@ export const BlackjackGameScreen: React.FC = () => {
         },
         'player-blackjack': {
           type: 'success' as AlertType,
-          title: 'Blackjack',
-          message: `Blackjack! You won ${finishedGame.payout} coins`,
+          title: 'Blackjack! 🃏',
+          message: `Blackjack! You won ${finishedGame.payout} coins!`,
         },
       };
 
@@ -193,7 +200,6 @@ export const BlackjackGameScreen: React.FC = () => {
       showAlert(result.type, result.title, result.message);
     }, 500);
   };
-
   const handleNewGame = () => {
     setGame(null);
     setGameState('betting');

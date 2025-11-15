@@ -17,11 +17,12 @@ export class HeartGameAdapter {
 
   static async validateSolution(
     puzzle: HeartPuzzle,
-    userSolution: number
+    userSolution: number,
+    userId: string
   ): Promise<HeartGameResult> {
     const response = await window.electron.ipcRenderer.invoke<
       APIResponse<HeartGameResult>
-    >(IPC_CHANNELS.HEART.VALIDATE_SOLUTION, { puzzle, userSolution });
+    >(IPC_CHANNELS.HEART.VALIDATE_SOLUTION, { puzzle, userSolution }, userId);
 
     if (!response.success || !response.data) {
       throw new Error(response.error || 'Failed to validate solution');

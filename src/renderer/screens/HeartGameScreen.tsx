@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Card, TitleBar, Modal } from '../components';
 import { HeartGameAdapter } from '../adapters/heartAdapter';
 import type { HeartPuzzle, HeartGameResult } from '../../shared/heartGameTypes';
+import { useAuth } from 'renderer/contexts/UserContext';
 
 type GameState = 'loading' | 'playing' | 'submitting' | 'result';
 
 export const HeartGameScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { user, refreshProfile } = useAuth();
   const [gameState, setGameState] = useState<GameState>('loading');
   const [puzzle, setPuzzle] = useState<HeartPuzzle | null>(null);
   const [userAnswer, setUserAnswer] = useState<string>('');
@@ -38,7 +40,7 @@ export const HeartGameScreen: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    if (!puzzle || !userAnswer.trim()) {
+    if (!puzzle || !userAnswer.trim() || !useFormAction) {
       setError('Please enter an answer');
       return;
     }
@@ -61,9 +63,11 @@ export const HeartGameScreen: React.FC = () => {
       const timeTaken = Math.floor((Date.now() - startTime) / 1000);
       const validation = await HeartGameAdapter.validateSolution(
         puzzle,
-        answer
+        answer,
+        user.id
       );
 
+      await refreshProfile();
       setResult({
         ...validation,
         userSolution: answer,
@@ -77,7 +81,6 @@ export const HeartGameScreen: React.FC = () => {
       setGameState('playing');
     }
   };
-
   const handlePlayAgain = () => {
     loadNewPuzzle();
   };

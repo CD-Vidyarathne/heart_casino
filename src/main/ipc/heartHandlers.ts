@@ -1,6 +1,7 @@
 import { ipcMain } from 'electron';
 import { IPC_CHANNELS } from '../../shared/channels';
 import { heartGameService } from '../services/heart/heartService';
+import { userService } from '../services/user/userService';
 import {
   ValidateSolutionRequest,
   ValidateSolutionResponse,
@@ -22,7 +23,7 @@ export function registerHeartHandlers() {
 
   ipcMain.handle(
     IPC_CHANNELS.HEART.VALIDATE_SOLUTION,
-    async (_event, request: ValidateSolutionRequest) => {
+    async (_event, request: ValidateSolutionRequest, userId: string) => {
       try {
         const isCorrect = heartGameService.validateSolution(
           request.puzzle,
@@ -32,6 +33,10 @@ export function registerHeartHandlers() {
         const reward = isCorrect
           ? heartGameService.calculateReward(request.puzzle)
           : 0;
+
+        if (isCorrect && reward > 0) {
+          await userService.updateBalance(userId, reward, 'add');
+        }
 
         const response: ValidateSolutionResponse = {
           isCorrect,

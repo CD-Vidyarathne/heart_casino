@@ -27,10 +27,10 @@ export class BlackjackAdapter {
     return response.data;
   }
 
-  static async stand(gameId: string): Promise<BlackjackGame> {
+  static async stand(gameId: string, userId: string): Promise<BlackjackGame> {
     const response = await window.electron.ipcRenderer.invoke<
       APIResponse<BlackjackGame>
-    >(IPC_CHANNELS.BLACKJACK.STAND, gameId);
+    >(IPC_CHANNELS.BLACKJACK.STAND, gameId, userId);
 
     if (!response.success || !response.data) {
       throw new Error(response.error || 'Failed to stand');
@@ -39,10 +39,13 @@ export class BlackjackAdapter {
     return response.data;
   }
 
-  static async doubleDown(gameId: string): Promise<BlackjackGame> {
+  static async doubleDown(
+    gameId: string,
+    userId: string
+  ): Promise<BlackjackGame> {
     const response = await window.electron.ipcRenderer.invoke<
       APIResponse<BlackjackGame>
-    >(IPC_CHANNELS.BLACKJACK.DOUBLE_DOWN, gameId);
+    >(IPC_CHANNELS.BLACKJACK.DOUBLE_DOWN, gameId, userId);
 
     if (!response.success || !response.data) {
       throw new Error(response.error || 'Failed to double down');

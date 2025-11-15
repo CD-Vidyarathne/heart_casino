@@ -87,4 +87,21 @@ export class UserAdapter {
 
     return response.data;
   }
+
+  static async updateBalance(
+    userId: string,
+    amount: number,
+    operation: 'add' | 'subtract' | 'set',
+    session?: { access_token: string; refresh_token?: string }
+  ) {
+    const response = await window.electron.ipcRenderer.invoke<
+      UserResponse<any>
+    >(IPC_CHANNELS.USER.UPDATE_BALANCE, userId, amount, operation, session);
+
+    if (!response.success) {
+      throw new Error(response.error || 'Balance update failed');
+    }
+
+    return response.data;
+  }
 }

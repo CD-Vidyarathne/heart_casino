@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron';
 import { blackjackService } from '../services/blackjack/blackjackService';
+import { userService } from '../services/user/userService';
 import { IPC_CHANNELS } from '../../shared/channels';
 
 export function registerBlackjackHandlers() {
@@ -7,7 +8,14 @@ export function registerBlackjackHandlers() {
     IPC_CHANNELS.BLACKJACK.START_GAME,
     async (_event, userId: string, bet: number) => {
       try {
+        await userService.updateBalance(userId, bet, 'subtract');
+
         const game = blackjackService.startGame(userId, bet);
+
+        if (game.state === 'game-over' && game.payout !== undefined) {
+          await userService.updateBalance(userId, game.payout, 'add');
+        }
+
         return { success: true, data: game };
       } catch (error) {
         return {
@@ -33,9 +41,14 @@ export function registerBlackjackHandlers() {
 
   ipcMain.handle(
     IPC_CHANNELS.BLACKJACK.STAND,
-    async (_event, gameId: string) => {
+    async (_event, gameId: string, userId: string) => {
       try {
         const game = blackjackService.stand(gameId);
+
+        if (game.payout !== undefined && game.payout > 0) {
+          await userService.updateBalance(userId, game.payout, 'add');
+        }
+
         return { success: true, data: game };
       } catch (error) {
         return {
@@ -48,9 +61,23 @@ export function registerBlackjackHandlers() {
 
   ipcMain.handle(
     IPC_CHANNELS.BLACKJACK.DOUBLE_DOWN,
-    async (_event, gameId: string) => {
+    async (_event, gameId: string, userId: string) => {
       try {
+        const currentGame = blackjackService.getGame(gameId);
+        if (!currentGame) {
+          throw new Error('Game not found');
+        }
+
+        const originalBet = currentGame.bet;
+
+        await userService.updateBalance(userId, originalBet, 'subtract');
+
         const game = blackjackService.doubleDown(gameId);
+
+        if (game.payout !== undefined && game.payout > 0) {
+          await userService.updateBalance(userId, game.payout, 'add');
+        }
+
         return { success: true, data: game };
       } catch (error) {
         return {

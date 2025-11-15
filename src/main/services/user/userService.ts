@@ -1,5 +1,8 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { getSupabaseClient, getSupabaseClientWithSession } from './dbClient';
+import {
+  getSupabaseClient,
+  getSupabaseClientWithSession,
+} from '../../../lib/dbClient';
 export class UserService {
   private supabaseClient: SupabaseClient | null = null;
 
@@ -91,6 +94,66 @@ export class UserService {
       console.error('Supabase profile update error:', error);
       throw error;
     }
+    return data;
+  }
+
+  async updateBalance(
+    userId: string,
+    amount: number,
+    operation: 'add' | 'subtract' | 'set',
+    session?: { access_token: string; refresh_token?: string }
+  ) {
+    const client = session
+      ? await getSupabaseClientWithSession(session)
+      : this.supabase;
+
+    const { data: profile, error: fetchError } = await client
+      .from('profiles')
+      .select('balance')
+      .eq('id', userId)
+      .single();
+
+    if (fetchError) {
+      console.error('Failed to fetch current balance:', fetchError);
+      throw fetchError;
+    }
+
+    const currentBalance = profile?.balance || 0;
+    let newBalance: number;
+
+    switch (operation) {
+      case 'add':
+        newBalance = currentBalance + amount;
+        break;
+      case 'subtract':
+        newBalance = Math.max(0, currentBalance - amount);
+        break;
+      case 'set':
+        newBalance = amount;
+        break;
+      default:
+        throw new Error('Invalid balance operation');
+    }
+
+    const { data, error } = await client
+      .from('profiles')
+      .update({
+        balance: newBalance,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', userId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Failed to update balance:', error);
+      throw error;
+    }
+
+    console.log(
+      `Balance updated for user ${userId}: ${currentBalance} -> ${newBalance} (${operation} ${amount})`
+    );
+
     return data;
   }
 }

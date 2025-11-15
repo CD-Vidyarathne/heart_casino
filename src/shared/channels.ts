@@ -10,6 +10,7 @@ export const IPC_CHANNELS = {
     GET_SESSION: 'user:get-session',
     GET_USER_PROFILE: 'user:get-user-profile',
     UPDATE_PROFILE: 'user:update-profile',
+    UPDATE_BALANCE: 'user:update-balance',
   },
   BLACKJACK: {
     START_GAME: 'blackjack:start-game',

@@ -111,4 +111,36 @@ export function registerUserHandlers() {
       }
     }
   );
+
+  ipcMain.handle(
+    IPC_CHANNELS.USER.UPDATE_BALANCE,
+    async (
+      _event,
+      userId: string,
+      amount: number,
+      operation: 'add' | 'subtract' | 'set',
+      session?: { access_token: string; refresh_token?: string }
+    ) => {
+      try {
+        console.log(
+          `Updating balance for user ${userId}: ${operation} ${amount}`
+        );
+        const data = await userService.updateBalance(
+          userId,
+          amount,
+          operation,
+          session
+        );
+        console.log('Balance update successful:', data);
+        return { success: true, data };
+      } catch (error) {
+        console.error('Balance update error:', error);
+        return {
+          success: false,
+          error:
+            error instanceof Error ? error.message : 'Balance update failed',
+        };
+      }
+    }
+  );
 }
