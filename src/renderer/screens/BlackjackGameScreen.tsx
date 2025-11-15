@@ -212,7 +212,7 @@ export const BlackjackGameScreen: React.FC = () => {
 
     return (
       <img
-        src={getCardImage(card)}
+        src={getCardImage(card.suit, card.rank)}
         alt={`${card.rank} of ${card.suit}`}
         className="w-16 h-24 rounded-lg shadow-lg border-2 border-purple-500/30"
       />
