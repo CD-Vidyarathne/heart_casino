@@ -1,86 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, TitleBar } from '../components';
+import { GameHistoryAdapter } from '../adapters/gameHistoryAdapter';
+import { useAuth } from '../contexts/UserContext';
+import type {
+  GameHistoryRecord,
+  GameHistoryStats,
+} from '../../shared/gameHistoryTypes';
 
-interface GameRecord {
-  id: string;
-  gameType: 'blackjack' | 'heart-game';
-  date: string;
-  result: 'win' | 'loss' | 'tie';
-  score: number;
-  opponentScore?: number;
-  duration: string;
-  chipsWon: number;
-  chipsLost: number;
-}
-
-// Mock data - in a real app, this would come from an API
-const mockGameHistory: GameRecord[] = [
-  {
-    id: '1',
-    gameType: 'blackjack',
-    date: '2024-01-15',
-    result: 'win',
-    score: 21,
-    opponentScore: 18,
-    duration: '3:45',
-    chipsWon: 150,
-    chipsLost: 0,
-  },
-  {
-    id: '2',
-    gameType: 'blackjack',
-    date: '2024-01-14',
-    result: 'loss',
-    score: 23,
-    opponentScore: 20,
-    duration: '2:30',
-    chipsWon: 0,
-    chipsLost: 100,
-  },
-  {
-    id: '3',
-    gameType: 'heart-game',
-    date: '2024-01-13',
-    result: 'win',
-    score: 15,
-    opponentScore: 25,
-    duration: '8:15',
-    chipsWon: 200,
-    chipsLost: 0,
-  },
-  {
-    id: '4',
-    gameType: 'blackjack',
-    date: '2024-01-12',
-    result: 'tie',
-    score: 19,
-    opponentScore: 19,
-    duration: '4:20',
-    chipsWon: 0,
-    chipsLost: 0,
-  },
-  {
-    id: '5',
-    gameType: 'heart-game',
-    date: '2024-01-11',
-    result: 'loss',
-    score: 35,
-    opponentScore: 20,
-    duration: '6:10',
-    chipsWon: 0,
-    chipsLost: 150,
-  },
-];
-
-export const GamesHistory: React.FC = () => {
+export const GamesHistoryScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { user, session } = useAuth();
+
   const [filter, setFilter] = useState<'all' | 'blackjack' | 'heart-game'>(
     'all'
   );
+  const [gameHistory, setGameHistory] = useState<GameHistoryRecord[]>([]);
+  const [stats, setStats] = useState<GameHistoryStats>({
+    totalGames: 0,
+    wins: 0,
+    losses: 0,
+    ties: 0,
+    chipsWon: 0,
+    chipsLost: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredGames = mockGameHistory.filter(
-    (game) => filter === 'all' || game.gameType === filter
+  useEffect(() => {
+    loadGameHistory();
+    loadStats();
+  }, [user, session]);
+
+  const loadGameHistory = async () => {
+    if (!user?.id) return;
+
+    try {
+      setIsLoading(true);
+      setError(null);
+      const history = await GameHistoryAdapter.getUserHistory(
+        user.id,
+        undefined,
+        50,
+        session
+      );
+      setGameHistory(history);
+    } catch (err) {
+      console.error('Failed to load game history:', err);
+      setError(
+        err instanceof Error ? err.message : 'Failed to load game history'
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadStats = async () => {
+    if (!user?.id) return;
+
+    try {
+      const userStats = await GameHistoryAdapter.getUserStats(user.id, session);
+      setStats(userStats);
+    } catch (err) {
+      console.error('Failed to load stats:', err);
+    }
+  };
+
+  const filteredGames = gameHistory.filter(
+    (game) => filter === 'all' || game.game_type === filter
   );
 
   const getGameIcon = (gameType: string) => {
@@ -113,18 +100,32 @@ export const GamesHistory: React.FC = () => {
     }
   };
 
-  const totalStats = mockGameHistory.reduce(
-    (acc, game) => {
-      acc.totalGames++;
-      if (game.result === 'win') acc.wins++;
-      else if (game.result === 'loss') acc.losses++;
-      else acc.ties++;
-      acc.chipsWon += game.chipsWon;
-      acc.chipsLost += game.chipsLost;
-      return acc;
-    },
-    { totalGames: 0, wins: 0, losses: 0, ties: 0, chipsWon: 0, chipsLost: 0 }
-  );
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
+  const formatDuration = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="screen-container">
+        <div className="screen-content flex items-center justify-center">
+          <div className="text-white text-xl poppins">
+            Loading game history...
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="screen-container">
@@ -135,33 +136,74 @@ export const GamesHistory: React.FC = () => {
           className="mb-6"
         />
 
+        {error && (
+          <Card className="p-4 mb-4 bg-red-900/30 border-red-500/50">
+            <p className="text-red-300 poppins text-center">{error}</p>
+          </Card>
+        )}
+
         {/* Stats Overview */}
         <div className="grid grid-cols-2 gap-3 mb-6">
           <Card className="p-3 text-center">
             <div className="text-xl font-bold text-white luckiest-guy">
-              {totalStats.totalGames}
+              {stats.totalGames}
             </div>
             <div className="text-gray-300 text-xs poppins">Total Games</div>
           </Card>
           <Card className="p-3 text-center">
             <div className="text-xl font-bold text-green-400 luckiest-guy">
-              {totalStats.wins}
+              {stats.wins}
             </div>
             <div className="text-gray-300 text-xs poppins">Wins</div>
           </Card>
           <Card className="p-3 text-center">
             <div className="text-xl font-bold text-red-400 luckiest-guy">
-              {totalStats.losses}
+              {stats.losses}
             </div>
             <div className="text-gray-300 text-xs poppins">Losses</div>
           </Card>
           <Card className="p-3 text-center">
             <div className="text-xl font-bold text-yellow-400 luckiest-guy">
-              {totalStats.ties}
+              {stats.ties}
             </div>
             <div className="text-gray-300 text-xs poppins">Ties</div>
           </Card>
         </div>
+
+        <Card className="p-4 mb-4">
+          <div className="flex justify-between items-center">
+            <div className="flex-1">
+              <div className="text-xs text-gray-300 poppins mb-1">
+                Total Earned
+              </div>
+              <div className="text-lg font-bold text-green-400 luckiest-guy">
+                +{stats.chipsWon}
+              </div>
+            </div>
+            <div className="flex-1 text-center">
+              <div className="text-xs text-gray-300 poppins mb-1">
+                Net Result
+              </div>
+              <div
+                className={`text-lg font-bold luckiest-guy ${stats.chipsWon - stats.chipsLost >= 0
+                    ? 'text-green-400'
+                    : 'text-red-400'
+                  }`}
+              >
+                {stats.chipsWon - stats.chipsLost >= 0 ? '+' : ''}
+                {stats.chipsWon - stats.chipsLost}
+              </div>
+            </div>
+            <div className="flex-1 text-right">
+              <div className="text-xs text-gray-300 poppins mb-1">
+                Total Lost
+              </div>
+              <div className="text-lg font-bold text-red-400 luckiest-guy">
+                -{stats.chipsLost}
+              </div>
+            </div>
+          </div>
+        </Card>
 
         {/* Filter Buttons */}
         <div className="flex gap-1 mb-4 justify-center">
@@ -200,7 +242,9 @@ export const GamesHistory: React.FC = () => {
                 No Games Found
               </h3>
               <p className="text-gray-300 text-sm poppins">
-                Start playing to see your game history here!
+                {filter === 'all'
+                  ? 'Start playing to see your game history here!'
+                  : `No ${filter.replace('-', ' ')} games found.`}
               </p>
             </Card>
           ) : (
@@ -208,13 +252,15 @@ export const GamesHistory: React.FC = () => {
               <Card key={game.id} className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="text-2xl">{getGameIcon(game.gameType)}</div>
+                    <div className="text-2xl">
+                      {getGameIcon(game.game_type)}
+                    </div>
                     <div>
                       <h3 className="text-base font-bold text-white capitalize luckiest-guy">
-                        {game.gameType.replace('-', ' ')}
+                        {game.game_type.replace('-', ' ')}
                       </h3>
                       <p className="text-gray-300 text-xs poppins">
-                        {game.date}
+                        {formatDate(game.created_at)}
                       </p>
                     </div>
                   </div>
@@ -226,25 +272,27 @@ export const GamesHistory: React.FC = () => {
                       {getResultText(game.result)}
                     </div>
                     <div className="text-gray-300 text-xs poppins">
-                      {game.duration} • {game.score}
-                      {game.opponentScore && ` vs ${game.opponentScore}`}
+                      {formatDuration(game.duration)} • {game.score}
+                      {game.opponent_score !== undefined &&
+                        game.opponent_score !== null &&
+                        ` / ${game.opponent_score}`}
                     </div>
                   </div>
 
                   <div className="text-right">
-                    {game.chipsWon > 0 && (
+                    {game.chips_won > 0 && (
                       <div className="text-green-400 font-bold text-sm luckiest-guy">
-                        +{game.chipsWon}
+                        +{game.chips_won}
                       </div>
                     )}
-                    {game.chipsLost > 0 && (
+                    {game.chips_lost > 0 && (
                       <div className="text-red-400 font-bold text-sm luckiest-guy">
-                        -{game.chipsLost}
+                        -{game.chips_lost}
                       </div>
                     )}
-                    {game.chipsWon === 0 && game.chipsLost === 0 && (
+                    {game.chips_won === 0 && game.chips_lost === 0 && (
                       <div className="text-gray-400 text-xs poppins">
-                        No chips
+                        No coins
                       </div>
                     )}
                   </div>

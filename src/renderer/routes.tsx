@@ -7,7 +7,7 @@ import { LoginScreen } from './screens/LoginScreen';
 import { RegistrationScreen } from './screens/RegistrationScreen';
 import { RegistrationProfileEditScreen } from './screens/RegistrationProfileEditScreen';
 import { GameSelectionScreen } from './screens/GameSelectionScreen';
-import { GamesHistory } from './screens/GamesHistory';
+import { GamesHistoryScreen } from './screens/GamesHistoryScreen';
 import { ProfileEditScreen } from './screens/ProfileEditScreen';
 import { Navigation, ProtectedRoute, PublicRoute } from './components';
 import { AppLayout } from './layout';
@@ -96,7 +96,7 @@ export function AppRoutes() {
           <Route
             element={
               <ProtectedRoute>
-                <GamesHistory />
+                <GamesHistoryScreen />
               </ProtectedRoute>
             }
             path="/games-history"

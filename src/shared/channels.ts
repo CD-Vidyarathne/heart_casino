@@ -19,6 +19,11 @@ export const IPC_CHANNELS = {
     DOUBLE_DOWN: 'blackjack:double-down',
     GET_GAME_STATE: 'blackjack:get-game-state',
   },
+  GAME_HISTORY: {
+    CREATE_RECORD: 'game-history:create-record',
+    GET_USER_HISTORY: 'game-history:get-user-history',
+    GET_USER_STATS: 'game-history:get-user-stats',
+  },
 } as const;
 
 type ChannelValues<T> = T extends object

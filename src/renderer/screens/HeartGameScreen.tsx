@@ -11,7 +11,9 @@ export const HeartGameScreen: React.FC = () => {
   const navigate = useNavigate();
   const { user, refreshProfile } = useAuth();
   const [gameState, setGameState] = useState<GameState>('loading');
-  const [puzzle, setPuzzle] = useState<HeartPuzzle | null>(null);
+  const [puzzle, setPuzzle] = useState<
+    (HeartPuzzle & { sessionId?: string }) | null
+  >(null);
   const [userAnswer, setUserAnswer] = useState<string>('');
   const [result, setResult] = useState<HeartGameResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -61,9 +63,17 @@ export const HeartGameScreen: React.FC = () => {
       setError(null);
 
       const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+
       const validation = await HeartGameAdapter.validateSolution(
-        puzzle,
-        answer,
+        {
+          puzzle: {
+            question: puzzle.question,
+            solution: puzzle.solution,
+            carrots: puzzle.carrots,
+          },
+          userSolution: answer,
+          sessionId: puzzle.sessionId,
+        },
         user.id
       );
 
@@ -81,6 +91,7 @@ export const HeartGameScreen: React.FC = () => {
       setGameState('playing');
     }
   };
+
   const handlePlayAgain = () => {
     loadNewPuzzle();
   };
@@ -109,6 +120,7 @@ export const HeartGameScreen: React.FC = () => {
       </div>
     );
   };
+
   const renderLoadingState = () => (
     <div className="flex flex-col items-center justify-center space-y-4">
       <div className="animate-spin text-6xl">❤️</div>
